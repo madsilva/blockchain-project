@@ -8,8 +8,10 @@ const MAX_RETRIES = process.env.MAX_RETRIES || 5
 const OracleJSON = require('./oracle/build/contracts/EthPriceOracle.json')
 var pendingRequests = []
 const bent = require('bent');
+//Location of file with simulated api response from python code
 var url="http://127.0.0.1:8887/pythonProject/test.json";
 const getJSON = bent('json');
+//the affiliate code to look for in the file
 var affcode="testbbbb"
 
 async function getOracleContract (web3js) {
@@ -67,10 +69,6 @@ async function processRequest (oracleContract, ownerAddress, id, callerAddress) 
 }
 
 async function setLatestEthPrice (oracleContract, callerAddress, ownerAddress, ethPrice, id) {
-  //ethPrice = ethPrice.replace('.', '')
-  //const multiplier = new BN(10**10, 10)
-  //const ethPriceInt = (new BN(parseInt(ethPrice), 10)).mul(multiplier)
-  //const idInt = new BN(parseInt(id))
   try {
     await oracleContract.methods.setLatestEthPrice(ethPriceInt.toString(), callerAddress, ethPrice).send({ from: ownerAddress })
   } catch (error) {
@@ -81,7 +79,9 @@ async function setLatestEthPrice (oracleContract, callerAddress, ownerAddress, e
 
 async function retrieveLatestEthPrice() {
   total=0
+  //get sales record
   let obj = await getJSON(url)
+  //filter relevant sales and sum
   var data = JSON.parse(JSON.stringify(obj), function(key, value) { 
     if ( value.affiliate_code === affcode ) total+=(parseInt(value.total)); 
     return value; })
