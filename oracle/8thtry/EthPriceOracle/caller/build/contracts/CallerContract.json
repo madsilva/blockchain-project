@@ -3061,15 +3061,32 @@
           ],
           "name": "OwnershipTransferred",
           "type": "event"
+        },
+        "0x413d5cb3e63e6f1600e1c9a9ea82162f96308900be3182afb14156b4a034b8d7": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "name": "totalSales",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "name": "id",
+              "type": "uint256"
+            }
+          ],
+          "name": "SalesUpdatedEvent",
+          "type": "event"
         }
       },
       "links": {},
-      "address": "0xF50a2Af76814A101FA25bfF795e56f514a5b56ee",
-      "transactionHash": "0x6368770d00e49ba31140b5a34e9ad394cca7a4031a1db4305db8371a7529fff3"
+      "address": "0x7beC52DE5EBAe256B79B279372fF18b933159A9d",
+      "transactionHash": "0xabdcbda906ad95b4f690da897fbf66bfaf81f758c9d0953dadc27b3a3bac08eb"
     }
   },
   "schemaVersion": "3.3.1",
-  "updatedAt": "2020-11-17T20:45:28.465Z",
+  "updatedAt": "2020-11-17T22:00:05.662Z",
   "networkType": "ethereum",
   "devdoc": {
     "methods": {

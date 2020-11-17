@@ -70,8 +70,11 @@ async function processRequest (oracleContract, ownerAddress, id, callerAddress) 
 
 async function setLatestEthPrice (oracleContract, callerAddress, ownerAddress, ethPrice, id) {
   try {
-    await oracleContract.methods.setLatestEthPrice(ethPriceInt.toString(), callerAddress, ethPrice).send({ from: ownerAddress })
+    await oracleContract.methods.setLatestEthPrice(ethPrice, callerAddress, id).send({ from: ownerAddress })
+    
   } catch (error) {
+    console.log(ethPrice)
+    console.log(ethPrice.toString())
     console.log('Error encountered while calling setLatestEthPrice.')
     // Do some error handling
   }
@@ -86,7 +89,7 @@ async function retrieveLatestEthPrice() {
     if ( value.affiliate_code === affcode ) total+=(parseInt(value.total)); 
     return value; })
   console.log(total)
-  return total.toString;
+  return total.toString();
 
 }
 
