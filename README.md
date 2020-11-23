@@ -14,4 +14,4 @@
 6. cd into `test_json` directory and run `python3 -m http.server` in a terminal tab
 7. cd back into `client` and run `node EthPriceOracle.js` and `node Client.js` in two terminal tabs
 
-Note: in order to run the React server in `client` using `npm run start`, you have to uncomment `export default getWeb3` at the bottom of the file and comment out the `module.exports` statement. In order to run the pure Node.js files, you have to reverse this (for now).
+Note: in order to run the React server in `client` using `npm run start`, you have to uncomment `export default getWeb3` at the bottom of the file `truffle/client/src/getWeb3.js` and comment out the `module.exports` statement. In order to run the pure Node.js files, you have to reverse this (for now).
