@@ -17,8 +17,7 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function",
-      "constant": true
+      "type": "function"
     },
     {
       "inputs": [],
@@ -31,8 +30,7 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function",
-      "constant": true
+      "type": "function"
     },
     {
       "inputs": [
@@ -48,18 +46,18 @@
       "type": "function"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.7.4+commit.3f05b770\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"last_completed_migration\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"completed\",\"type\":\"uint256\"}],\"name\":\"setCompleted\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"/home/madsilva/dev/blockchain/truffle/contracts/Migrations.sol\":\"Migrations\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/home/madsilva/dev/blockchain/truffle/contracts/Migrations.sol\":{\"keccak256\":\"0xb849e738d1fa4442c9adc31183524188dd6a865fa6323c0bb24ad36b54bea8ed\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://a962e9a2576b624e2a829220dc5993fa540845d8c4a2577e84a58b4b1387ef6b\",\"dweb:/ipfs/QmRUCF8fQdWtGFEdSPyF4tysLFrt2oRux6CEc3wvd5jcqz\"]}},\"version\":1}",
-  "bytecode": "0x608060405234801561001057600080fd5b50336000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550610185806100606000396000f3fe608060405234801561001057600080fd5b50600436106100415760003560e01c8063445df0ac146100465780638da5cb5b14610064578063fdacd57614610098575b600080fd5b61004e6100c6565b6040518082815260200191505060405180910390f35b61006c6100cc565b604051808273ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b6100c4600480360360208110156100ae57600080fd5b81019080803590602001909291905050506100f0565b005b60015481565b60008054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b60008054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16141561014c57806001819055505b5056fea264697066735822122047955440d64c8466d75e81a29ce29a3c7ca419d6ca7963518f83de7f30393f7964736f6c63430007040033",
-  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100415760003560e01c8063445df0ac146100465780638da5cb5b14610064578063fdacd57614610098575b600080fd5b61004e6100c6565b6040518082815260200191505060405180910390f35b61006c6100cc565b604051808273ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b6100c4600480360360208110156100ae57600080fd5b81019080803590602001909291905050506100f0565b005b60015481565b60008054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b60008054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16141561014c57806001819055505b5056fea264697066735822122047955440d64c8466d75e81a29ce29a3c7ca419d6ca7963518f83de7f30393f7964736f6c63430007040033",
+  "metadata": "{\"compiler\":{\"version\":\"0.7.4+commit.3f05b770\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[],\"name\":\"last_completed_migration\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"completed\",\"type\":\"uint256\"}],\"name\":\"setCompleted\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"/home/madsilva/dev/blockchain/blockchain-project/truffle/contracts/Migrations.sol\":\"Migrations\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/home/madsilva/dev/blockchain/blockchain-project/truffle/contracts/Migrations.sol\":{\"keccak256\":\"0xb849e738d1fa4442c9adc31183524188dd6a865fa6323c0bb24ad36b54bea8ed\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://a962e9a2576b624e2a829220dc5993fa540845d8c4a2577e84a58b4b1387ef6b\",\"dweb:/ipfs/QmRUCF8fQdWtGFEdSPyF4tysLFrt2oRux6CEc3wvd5jcqz\"]}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b50336000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550610185806100606000396000f3fe608060405234801561001057600080fd5b50600436106100415760003560e01c8063445df0ac146100465780638da5cb5b14610064578063fdacd57614610098575b600080fd5b61004e6100c6565b6040518082815260200191505060405180910390f35b61006c6100cc565b604051808273ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b6100c4600480360360208110156100ae57600080fd5b81019080803590602001909291905050506100f0565b005b60015481565b60008054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b60008054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16141561014c57806001819055505b5056fea2646970667358221220012aa8adb93fc73a46185cd3b0e8440aec367146a04f5aab8bd4e748e97ca6eb64736f6c63430007040033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100415760003560e01c8063445df0ac146100465780638da5cb5b14610064578063fdacd57614610098575b600080fd5b61004e6100c6565b6040518082815260200191505060405180910390f35b61006c6100cc565b604051808273ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b6100c4600480360360208110156100ae57600080fd5b81019080803590602001909291905050506100f0565b005b60015481565b60008054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b60008054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff163373ffffffffffffffffffffffffffffffffffffffff16141561014c57806001819055505b5056fea2646970667358221220012aa8adb93fc73a46185cd3b0e8440aec367146a04f5aab8bd4e748e97ca6eb64736f6c63430007040033",
   "immutableReferences": {},
   "generatedSources": [],
   "deployedGeneratedSources": [],
   "sourceMap": "57:311:2:-:0;;;209:50;;;;;;;;;;244:10;236:5;;:18;;;;;;;;;;;;;;;;;;57:311;;;;;;",
   "deployedSourceMap": "57:311:2:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;105:36;;;:::i;:::-;;;;;;;;;;;;;;;;;;;81:20;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;263:103;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;105:36;;;;:::o;81:20::-;;;;;;;;;;;;:::o;263:103::-;192:5;;;;;;;;;;178:19;;:10;:19;;;174:26;;;352:9:::1;325:24;:36;;;;174:26:::0;263:103;:::o",
   "source": "// SPDX-License-Identifier: MIT\npragma solidity ^0.7.4;\n\ncontract Migrations {\n  address public owner;\n  uint public last_completed_migration;\n\n  modifier restricted() {\n    if (msg.sender == owner) _;\n  }\n\n  constructor() public {\n    owner = msg.sender;\n  }\n\n  function setCompleted(uint completed) public restricted {\n    last_completed_migration = completed;\n  }\n}\n",
-  "sourcePath": "/home/madsilva/dev/blockchain/truffle/contracts/Migrations.sol",
+  "sourcePath": "/home/madsilva/dev/blockchain/blockchain-project/truffle/contracts/Migrations.sol",
   "ast": {
-    "absolutePath": "/home/madsilva/dev/blockchain/truffle/contracts/Migrations.sol",
+    "absolutePath": "/home/madsilva/dev/blockchain/blockchain-project/truffle/contracts/Migrations.sol",
     "exportedSymbols": {
       "Migrations": [
         295
@@ -453,7 +451,7 @@
     "src": "32:337:2"
   },
   "legacyAST": {
-    "absolutePath": "/home/madsilva/dev/blockchain/truffle/contracts/Migrations.sol",
+    "absolutePath": "/home/madsilva/dev/blockchain/blockchain-project/truffle/contracts/Migrations.sol",
     "exportedSymbols": {
       "Migrations": [
         295
@@ -883,8 +881,7 @@
     }
   },
   "schemaVersion": "3.3.2",
-  "updatedAt": "2020-11-23T16:56:40.872Z",
-  "networkType": "ethereum",
+  "updatedAt": "2020-11-23T22:58:25.390Z",
   "devdoc": {
     "kind": "dev",
     "methods": {},
