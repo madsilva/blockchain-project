@@ -6,7 +6,7 @@
   - `npm install --g ganache-cli`
   - `npm install --g truffle`
 3. Run `ganache-cli` in a terminal tab
-4. cd into `client` directory
+4. cd into `truffle/client` directory
 5. Run:
   - `truffle compile`
   - `npm install`
