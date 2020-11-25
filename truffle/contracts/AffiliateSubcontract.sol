@@ -2,7 +2,7 @@
 pragma solidity ^0.7.4;
 
 import "./AffiliateContract.sol";
-import "./EthPriceOracle.sol";
+import "./AffiliateOracle.sol";
 
 contract AffiliateSubcontract {
   // The main AffiliateContract that created this contract, which in turn is owned by the business owner.
@@ -33,10 +33,10 @@ contract AffiliateSubcontract {
   uint256 public immutable startTime;
 
   // Used to keep track of async requests to get information from the oracle.
-  mapping(uint256=>bool) myRequests;
+  mapping(uint256 => bool) myRequests;
 
   event ReceivedNewRequestIdEvent(uint256 id);
-  event PriceUpdatedEvent(uint256 ethPrice, uint256 id);
+  event CurrentTotalUpdatedEvent(uint256 currentTotal, uint256 id);
 
   receive() external payable { }
   fallback() external payable { }
@@ -73,13 +73,14 @@ contract AffiliateSubcontract {
   }
 
   function updateCurrentTotal() public onlyAffiliate {
+    require(affiliateResolved == false, "Affiliate already called resolve successfully on this subcontract.");
     uint256 endTime;
     if (block.timestamp < expiration) {
       endTime = block.timestamp;
     } else {
       endTime = expiration;
     }
-    uint256 id = EthPriceOracle(AffiliateContract(owner).oracle()).getLatestEthPrice(startTime, endTime);
+    uint256 id = AffiliateOracle(AffiliateContract(owner).oracle()).getAffiliateTotal(affiliate, startTime, endTime);
     myRequests[id] = true;
     emit ReceivedNewRequestIdEvent(id);
   }
@@ -88,13 +89,15 @@ contract AffiliateSubcontract {
     require(msg.sender == AffiliateContract(owner).oracle(), "Only the oracle can call this method.");
     require(myRequests[_id], "This request is not in my pending list.");
     currentTotal = _currentTotal;
+    totalLastUpdated = block.timestamp;
     delete myRequests[_id];
-    emit PriceUpdatedEvent(_currentTotal, _id);
+    emit CurrentTotalUpdatedEvent(_currentTotal, _id);
   }
 
   function affiliateResolve() public onlyAffiliate {
     require(expiration <= block.timestamp, "Subcontract not yet expired.");
     require(affiliateResolved == false, "Affiliate already called resolve successfully on this subcontract.");
+    require(totalLastUpdated >= expiration, "Current total is not up to date, affiliate must call updateCurrentTotal().");
     AffiliateContract mainContract = AffiliateContract(owner);
     require(mainContract.contractExpiration() > block.timestamp, "Main contract expired.");
     uint totalSubcontracts = mainContract.totalSubcontracts();

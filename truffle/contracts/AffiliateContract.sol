@@ -40,9 +40,12 @@ contract AffiliateContract {
   // The address of the oracle contract.
   address public oracle;
 
+  event GetCurrentSubcontractEvent(address payable sc);
+
   // The constructor should be called with the amount of the incentive fee plus the first contract stake.
   constructor(
     address payable _affiliate,
+    address _oracle,
     uint _totalSubcontracts,
     uint256 _subcontractDuration,
     uint256 _gracePeriodDuration,
@@ -54,6 +57,7 @@ contract AffiliateContract {
     require(_totalSubcontracts >= MIN_TOTAL_SUBCONTRACTS, "total subcontracts must be at least 3");
     owner = msg.sender;
     affiliate = _affiliate;
+    oracle = _oracle;
     totalSubcontracts = _totalSubcontracts;
     // PLACEHOLDER - check this???
     contractExpiration = block.timestamp + _totalSubcontracts*(_subcontractDuration + _gracePeriodDuration) + CONTRACT_END_GRACE_PERIOD;
@@ -86,14 +90,10 @@ contract AffiliateContract {
     oracle = _oracleAddress;
   }
 
-  event GetCurrentSubcontractEvent(address payable sc);
-
   function getCurrentSubcontract() public returns(address payable) {
-    address payable sc;
+    address payable sc = address(0x0);
     if (subcontractsSoFar > 0) {
       sc = subcontracts[subcontractsSoFar - 1];
-    } else {
-      sc = address(0x0);
     }
     emit GetCurrentSubcontractEvent(sc);
     return sc;
@@ -103,7 +103,6 @@ contract AffiliateContract {
   function createNextSubContract() public payable onlyOwner contractNotExpired {
     require(subcontractsSoFar < totalSubcontracts, "Total number of subcontracts exceeded.");
     require(msg.value == subcontractStake, "Incorrect stake amount.");
-    
     // Getting a reference to the previous/"current" subcontract
     SC.AffiliateSubcontract lastSubcontract = SC.AffiliateSubcontract(subcontracts[subcontractsSoFar - 1]);
     // Checking all the conditions necessary for making the next subcontract.
@@ -124,11 +123,11 @@ contract AffiliateContract {
       }
     }
     require(calledBySubcontract, "Only a subcontract can call this method.");
-    SC.AffiliateSubcontract lastSubcontract = SC.AffiliateSubcontract(msg.sender);
-    require(lastSubcontract.expiration() <= block.timestamp, "Last subcontract not yet expired.");
-    require(lastSubcontract.sellerGracePeriodEnd() <= block.timestamp, "Seller grace period not yet passed.");
-    require((lastSubcontract.indexNumber() + 1) != totalSubcontracts, "Cannot be called by last subcontract.");
-    require(lastSubcontract.nextSubcontract() == address(0x0), "Next subcontract is present.");
+    SC.AffiliateSubcontract callerSubcontract = SC.AffiliateSubcontract(msg.sender);
+    require(callerSubcontract.expiration() <= block.timestamp, "Caller subcontract not yet expired.");
+    require(callerSubcontract.sellerGracePeriodEnd() <= block.timestamp, "Caller subcontract seller grace period not yet passed.");
+    require((callerSubcontract.indexNumber() + 1) != totalSubcontracts, "Cannot be called by last subcontract.");
+    require(callerSubcontract.nextSubcontract() == address(0x0), "Next subcontract is present.");
     for (uint i = 0; i < subcontractsSoFar; i++) {
       SC.AffiliateSubcontract(subcontracts[i]).affiliateCleanup(msg.sender);
     }
