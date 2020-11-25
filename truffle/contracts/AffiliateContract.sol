@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.7.4;
 
-import * as SC from "./affiliate_subcontract.sol";
+import * as SC from "./AffiliateSubcontract.sol";
 
 contract AffiliateContract {
   // The minimum number of subcontracts is 3.
   uint constant MIN_TOTAL_SUBCONTRACTS = 3;
-  // The amount of time that's added onto the contract expiration time so that the affiliate has extra time to clear out all subcontracts.
+  // The amount of time that's added on to the contract expiration time so that the affiliate has extra time to clear out all subcontracts.
   // PLACEHOLDER - NEED TO FIX
   uint256 constant CONTRACT_END_GRACE_PERIOD = 15;
 
@@ -34,6 +34,11 @@ contract AffiliateContract {
   uint public immutable subcontractStake;
   // The amount of the incentive fee staked by the seller to incentivize them to hold up their end of the deal.
   uint public immutable incentiveFee;
+  // An integer representing the percentage of sales that the affiliate will receive. 
+  uint public immutable affiliatePercentage;
+
+  // The address of the oracle contract.
+  address public oracle;
 
   // The constructor should be called with the amount of the incentive fee plus the first contract stake.
   constructor(
@@ -42,7 +47,8 @@ contract AffiliateContract {
     uint256 _subcontractDuration,
     uint256 _gracePeriodDuration,
     uint _subcontractStake,
-    uint _incentiveFee
+    uint _incentiveFee,
+    uint _affiliatePercentage
   ) payable {
     require(msg.value == (_incentiveFee + _subcontractStake), "amount sent to constructor must equal incentive fee plus one subcontract stake");
     require(_totalSubcontracts >= MIN_TOTAL_SUBCONTRACTS, "total subcontracts must be at least 3");
@@ -51,16 +57,15 @@ contract AffiliateContract {
     totalSubcontracts = _totalSubcontracts;
     // PLACEHOLDER - check this???
     contractExpiration = block.timestamp + _totalSubcontracts*(_subcontractDuration + _gracePeriodDuration) + CONTRACT_END_GRACE_PERIOD;
-    // This is needed because immutabe vars can't be read in a constructor, so we use this instead of contractExpiration down below when we create the first subcontract.
-    uint256 tempContractExpiration = block.timestamp + _totalSubcontracts*(_subcontractDuration + _gracePeriodDuration) + CONTRACT_END_GRACE_PERIOD;
     subcontractDuration = _subcontractDuration;
     gracePeriodDuration = _gracePeriodDuration;
     subcontractStake = _subcontractStake;
     incentiveFee = _incentiveFee;
+    affiliatePercentage = _affiliatePercentage;
 
     // Creating the first subcontract.
     // REMEMBER THAT SUBCONTRACTSSOFAR MUST HAVE 1 SUBTRACTED BEFORE USING FOR INDEXING
-    subcontracts.push(address((new SC.AffiliateSubcontract){value: _subcontractStake}(_affiliate, _subcontractDuration, _gracePeriodDuration, tempContractExpiration, 0)));
+    subcontracts.push(address((new SC.AffiliateSubcontract){value: _subcontractStake}(_affiliate, _subcontractDuration, _gracePeriodDuration, block.timestamp, 0)));
     subcontractsSoFar++;
   }
 
@@ -77,12 +82,21 @@ contract AffiliateContract {
     _;
   }
 
+  function setOracleAddress (address _oracleAddress) public onlyOwner {
+    oracle = _oracleAddress;
+  }
+
+  event GetCurrentSubcontractEvent(address payable sc);
+
   function getCurrentSubcontract() public returns(address payable) {
+    address payable sc;
     if (subcontractsSoFar > 0) {
-      return subcontracts[subcontractsSoFar - 1];
+      sc = subcontracts[subcontractsSoFar - 1];
     } else {
-      return address(0x0);
+      sc = address(0x0);
     }
+    emit GetCurrentSubcontractEvent(sc);
+    return sc;
   }
 
   // called by the owner
@@ -96,7 +110,7 @@ contract AffiliateContract {
     require(lastSubcontract.expiration() <= block.timestamp, "The last subcontract is not yet expired.");
     require(lastSubcontract.sellerGracePeriodEnd() > block.timestamp, "The seller grace period already ended.");
     // msg.value = total amount the subcontract will be populated with 
-    subcontracts.push(address((new SC.AffiliateSubcontract){value: msg.value}(affiliate, subcontractDuration, gracePeriodDuration, contractExpiration, subcontractsSoFar)));
+    subcontracts.push(address((new SC.AffiliateSubcontract){value: msg.value}(affiliate, subcontractDuration, gracePeriodDuration, lastSubcontract.expiration(), subcontractsSoFar)));
     lastSubcontract.setNextSubcontract(subcontracts[subcontractsSoFar]);
     subcontractsSoFar++;
   }

@@ -38,23 +38,25 @@ async function filterEvents (oracleContract, web3js) {
 async function addRequestToQueue (event) {
   const callerAddress = event.returnValues.callerAddress
   const id = event.returnValues.id
-  pendingRequests.push({ callerAddress, id })
+  const startTime = event.returnValues.startTime
+  const endTime = event.returnValues.endTime
+  pendingRequests.push({ callerAddress, id, startTime, endTime })
 }
 
 async function processQueue (oracleContract, ownerAddress) {
   let processedRequests = 0
   while (pendingRequests.length > 0 && processedRequests < CHUNK_SIZE) {
     const req = pendingRequests.shift()
-    await processRequest(oracleContract, ownerAddress, req.id, req.callerAddress)
+    await processRequest(oracleContract, ownerAddress, req.id, req.callerAddress, req.startTime, req.endTime)
     processedRequests++
   }
 }
 
-async function processRequest (oracleContract, ownerAddress, id, callerAddress) {
+async function processRequest (oracleContract, ownerAddress, id, callerAddress, startTime, endTime) {
   let retries = 0
   while (retries < MAX_RETRIES) {
     try {
-      const ethPrice = await retrieveLatestEthPrice()
+      const ethPrice = await retrieveLatestEthPrice(startTime, endTime)
       console.log(ethPrice)
       await setLatestEthPrice(oracleContract, callerAddress, ownerAddress, ethPrice, id)
       return
@@ -81,7 +83,7 @@ async function setLatestEthPrice (oracleContract, callerAddress, ownerAddress, e
   }
 }
 
-async function retrieveLatestEthPrice() {
+async function retrieveLatestEthPrice(startTime, endTime) {
   total=0
   //get sales record
   let obj = await getJSON(url)
