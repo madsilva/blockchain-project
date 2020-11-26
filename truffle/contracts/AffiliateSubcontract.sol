@@ -35,7 +35,6 @@ contract AffiliateSubcontract {
   // Used to keep track of async requests to get information from the oracle.
   mapping(uint256 => bool) myRequests;
 
-  event ReceivedNewRequestIdEvent(uint256 id);
   event CurrentTotalUpdatedEvent(uint256 currentTotal, uint256 id);
 
   receive() external payable { }
@@ -82,7 +81,6 @@ contract AffiliateSubcontract {
     }
     uint256 id = AffiliateOracle(AffiliateContract(owner).oracle()).getAffiliateTotal(affiliate, startTime, endTime);
     myRequests[id] = true;
-    emit ReceivedNewRequestIdEvent(id);
   }
 
   function callback(uint256 _currentTotal, uint256 _id) public {

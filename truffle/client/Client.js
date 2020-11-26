@@ -30,12 +30,6 @@ async function filterEvents (callerContract) {
     }
     console.log('* New CurrentTotalUpdated event. affiliateTotal: ' + event.returnValues.currentTotal)
   })
-  callerContract.events.ReceivedNewRequestIdEvent({ filter: { } }, async (err, event) => {
-    console.log("Received new request id event")
-    if (err) {
-      console.error('Error on event', err)
-    }
-  })
 }
 
 async function init () {

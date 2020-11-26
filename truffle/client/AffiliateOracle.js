@@ -104,6 +104,7 @@ async function init () {
 (async () => {
   const { oracleContract, ownerAddress } = await init()
   setInterval(async () => {
+    console.log("Oracle address is: " + oracleContract.options.address)
     await processQueue(oracleContract, ownerAddress)
   }, SLEEP_INTERVAL)
 })()
