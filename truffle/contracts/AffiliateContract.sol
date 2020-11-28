@@ -40,8 +40,6 @@ contract AffiliateContract {
   // The address of the oracle contract.
   address public oracle;
 
-  event GetCurrentSubcontractEvent(address payable sc);
-
   // The constructor should be called with the amount of the incentive fee plus the first contract stake.
   constructor(
     address payable _affiliate,
@@ -90,13 +88,14 @@ contract AffiliateContract {
     oracle = _oracleAddress;
   }
 
-  function getCurrentSubcontract() public returns(address payable) {
-    address payable sc = address(0x0);
+  event GetMainContractStateInfoEvent(address payable currentSubcontract, uint subsSoFar, uint256 expiration);
+
+  function getMainContractStateInfo() public {
+    address payable currentSubcontract = address(0x0);
     if (subcontractsSoFar > 0) {
-      sc = subcontracts[subcontractsSoFar - 1];
+      currentSubcontract = subcontracts[subcontractsSoFar - 1];
     }
-    emit GetCurrentSubcontractEvent(sc);
-    return sc;
+    emit GetMainContractStateInfoEvent(currentSubcontract, subcontractsSoFar, contractExpiration);
   }
 
   // called by the owner

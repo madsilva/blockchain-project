@@ -22,7 +22,7 @@ contract AffiliateSubcontract {
 
   // Flag that is true when the affiliate has successfully called the resolve method and cashed out.
   bool private affiliateResolved = false;
-  // Flag that is true if the seller allowed the grace period to expire on this subcontract.
+  // Flag that is true if the seller allowed the grace period to expire on this subcontract. This is only set when the affiliate calls affiliateResolve.
   bool public gracePeriodExpired = false;
 
   // The most recent value for the total sales for this affiliate for the time this subcontract covers.
@@ -35,6 +35,7 @@ contract AffiliateSubcontract {
   // Used to keep track of async requests to get information from the oracle.
   mapping(uint256 => bool) myRequests;
 
+  event GetSubcontractStateInfoEvent(uint256 expiration, uint256 sellerGracePeriodEnd, address nextSubcontract, bool affiliateResolved, uint256 currentTotal);
   event CurrentTotalUpdatedEvent(uint256 currentTotal, uint256 id);
 
   receive() external payable { }
@@ -63,6 +64,10 @@ contract AffiliateSubcontract {
   modifier onlyAffiliate {
     require(msg.sender == affiliate, "Only the affiliate can call this method.");
     _;
+  }
+
+  function getSubcontractStateInfo() public {
+    emit GetSubcontractStateInfoEvent(expiration, sellerGracePeriodEnd, nextSubcontract, affiliateResolved, currentTotal);
   }
 
   function setNextSubcontract(address next) public onlyMainContract {

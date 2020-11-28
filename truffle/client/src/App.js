@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import getWeb3 from "./getWeb3";
 
 import "./App.css";
+import MainForm from "./form.js";
 
 class App extends Component {
   state = { storageValue: 0, web3: null, accounts: null, contract: null };
@@ -56,6 +57,7 @@ class App extends Component {
     }
     return (
       <div className="App">
+        <MainForm />
         <h1>Good to Go!</h1>
         <p>Your Truffle Box is installed and ready.</p>
         <h2>Smart Contract Example</h2>
