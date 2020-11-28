@@ -50,8 +50,8 @@ contract AffiliateSubcontract {
   ) payable {
     owner = msg.sender;
     affiliate = _affiliate;
-    expiration = block.timestamp + subcontractDuration;
-    sellerGracePeriodEnd = block.timestamp + subcontractDuration + sellerGracePeriodDuration;
+    expiration = _startTime + subcontractDuration;
+    sellerGracePeriodEnd = _startTime + subcontractDuration + sellerGracePeriodDuration;
     startTime = _startTime;
     indexNumber = _indexNumber;
   }
