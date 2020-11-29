@@ -1,7 +1,7 @@
 const getWeb3 = require('./getWeb3.js')
-const AffiliateContractJSON = require('../../build/contracts/AffiliateContract.json')
-const AffiliateSubcontractJSON = require('../../build/contracts/AffiliateSubcontract.json')
-const OracleJSON = require('../../build/contracts/AffiliateOracle.json')
+const AffiliateContractJSON = require('../src/contracts/AffiliateContract.json')
+const AffiliateSubcontractJSON = require('../src/contracts/AffiliateSubcontract.json')
+const OracleJSON = require('../src/contracts/AffiliateOracle.json')
 
 const SLEEP_INTERVAL = process.env.SLEEP_INTERVAL || 2000
 

@@ -2,7 +2,7 @@ const BN = require('bn.js')
 const bent = require('bent')
 const getJSON = bent('json');
 const getWeb3 = require('./getWeb3.js')
-const OracleJSON = require('../../build/contracts/AffiliateOracle.json')
+const OracleJSON = require('../src/contracts/AffiliateOracle.json')
 
 const SLEEP_INTERVAL = process.env.SLEEP_INTERVAL || 2000
 const CHUNK_SIZE = process.env.CHUNK_SIZE || 3
