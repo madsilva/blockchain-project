@@ -8,7 +8,7 @@ contract AffiliateContract {
   uint constant MIN_TOTAL_SUBCONTRACTS = 3;
   // The amount of time that's added on to the contract expiration time so that the affiliate has extra time to clear out all subcontracts.
   // PLACEHOLDER - NEED TO FIX
-  uint256 constant CONTRACT_END_GRACE_PERIOD = 15;
+  uint256 constant CONTRACT_END_GRACE_PERIOD = 300;
 
   // The business that wants to pay affiliates. Set to the address that calls the contract's constructor.
   address payable public immutable owner;
@@ -58,7 +58,7 @@ contract AffiliateContract {
     oracle = _oracle;
     totalSubcontracts = _totalSubcontracts;
     // PLACEHOLDER - check this???
-    contractExpiration = block.timestamp + _totalSubcontracts*(_subcontractDuration + _gracePeriodDuration) + CONTRACT_END_GRACE_PERIOD;
+    contractExpiration = block.timestamp + (_totalSubcontracts*_subcontractDuration) + CONTRACT_END_GRACE_PERIOD;
     subcontractDuration = _subcontractDuration;
     gracePeriodDuration = _gracePeriodDuration;
     subcontractStake = _subcontractStake;

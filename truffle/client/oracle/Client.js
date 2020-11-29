@@ -1,7 +1,7 @@
-const getWeb3 = require('./src/getWeb3.js')
-const AffiliateContractJSON = require('../build/contracts/AffiliateContract.json')
-const AffiliateSubcontractJSON = require('../build/contracts/AffiliateSubcontract.json')
-const OracleJSON = require('../build/contracts/AffiliateOracle.json')
+const getWeb3 = require('./getWeb3.js')
+const AffiliateContractJSON = require('../../build/contracts/AffiliateContract.json')
+const AffiliateSubcontractJSON = require('../../build/contracts/AffiliateSubcontract.json')
+const OracleJSON = require('../../build/contracts/AffiliateOracle.json')
 
 const SLEEP_INTERVAL = process.env.SLEEP_INTERVAL || 2000
 
@@ -17,9 +17,9 @@ async function getCallerContract (web3js, ownerAddress) {
   mainContract = await mainContract.deploy(
     {data: AffiliateContractJSON.bytecode, arguments: arguments})
     .send({from: ownerAddress, value: 2000000, gas: gas + 100})
-  const receipt = await mainContract.methods.getCurrentSubcontract().send({from: ownerAddress, gas: 2000000})
+  const receipt = await mainContract.methods.getMainContractStateInfo().send({from: ownerAddress, gas: 2000000})
 
-  const subcontract = await new web3js.eth.Contract(AffiliateSubcontractJSON.abi, receipt.events.GetCurrentSubcontractEvent.returnValues.sc)
+  const subcontract = await new web3js.eth.Contract(AffiliateSubcontractJSON.abi, receipt.events.GetMainContractStateInfoEvent.returnValues.currentSubcontract)
   return { subcontract, mainContract }
 }
 
