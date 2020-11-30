@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import getWeb3 from "./getWeb3";
+import {TabContent, TabPane, Nav, NavItem, NavLink} from 'reactstrap';
 
-import "./App.css";
+import getWeb3 from "./getWeb3";
 import MainForm from "./form.js";
 
 var contract = require("@truffle/contract");
@@ -9,7 +9,7 @@ const AffiliateContractJSON = require('./contracts/AffiliateContract.json')
 const AffiliateOracleContractJSON = require('./contracts/AffiliateOracle.json')
 
 class App extends Component {
-  state = { web3: null, accounts: null, contract: null };
+  state = { web3: null, accounts: null, contract: null, activeKey: '1' };
 
   componentDidMount = async () => {
     try {
@@ -66,24 +66,36 @@ class App extends Component {
     //this.setState({ storageValue: response });
   };
 
+  handleSelect(key) {
+    this.setState({activeKey: key});
+  }
+
   render() {
     if (!this.state.web3) {
       return <div>Loading Web3, accounts, and contract...</div>;
     }
     return (
       <div className="App">
-        <MainForm />
-        <h1>Good to Go!</h1>
-        <p>Your Truffle Box is installed and ready.</p>
-        <h2>Smart Contract Example</h2>
-        <p>
-          If your contracts compiled and migrated successfully, below will show
-          a stored value of 5 (by default).
-        </p>
-        <p>
-          Try changing the value stored on <strong>line 40</strong> of App.js.
-        </p>
-        <div>The stored value is: </div>
+        <Nav tabs>
+          <NavItem>
+            <NavLink onClick={() => this.handleSelect('1')}>
+              Create new contract
+            </NavLink>
+          </NavItem>
+          <NavItem>
+            <NavLink onClick={() => this.handleSelect('2')}>
+              Check status of existing contract
+            </NavLink>
+          </NavItem>
+        </Nav>
+        <TabContent activeTab={this.state.activeKey}>
+          <TabPane tabId="1">
+            <MainForm />
+          </TabPane>
+          <TabPane tabId="2">
+            test
+          </TabPane>
+        </TabContent>
       </div>
     );
   }

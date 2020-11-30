@@ -11,3 +11,75 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #09d3ac;
+}
+
+div {
+  margin: 15px;
+}
+
+.logs {
+  background-color: black;
+  font-size: 14px;
+  color: white;
+  font-weight: bold;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.tab-content {
+  border-left: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  padding: 10px;
+  margin: 0px;
+}
+
+.nav-tabs {
+  margin-bottom: 0;
+}
+
+input.form-control {
+  margin-right: 5px;
+}
+
+.alert-result {
+  margin-left: 0;
+}
+
+.small-input {
+  width: 200px;
+}
+
+.inline-input-btn .form-control {
+  margin: 0;
+  width: 200px;
+  border-radius: 0.25rem 0 0 0.25rem;
+  float: left;
+  border-right: 0;
+}
+
+.inline-input-btn .btn {
+  border-radius: 0 0.25rem 0.25rem 0;
+}
