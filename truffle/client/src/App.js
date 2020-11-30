@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import {TabContent, TabPane, Nav, NavItem, NavLink} from 'reactstrap';
 
 import getWeb3 from "./getWeb3";
-import MainForm from "./form.js";
+import NewContractForm from "./NewContractForm.js";
 
 var contract = require("@truffle/contract");
 const AffiliateContractJSON = require('./contracts/AffiliateContract.json')
@@ -90,7 +90,7 @@ class App extends Component {
         </Nav>
         <TabContent activeTab={this.state.activeKey}>
           <TabPane tabId="1">
-            <MainForm />
+            <NewContractForm />
           </TabPane>
           <TabPane tabId="2">
             test

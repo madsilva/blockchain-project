@@ -1,7 +1,7 @@
 import React, {Fragment} from 'react';
 import {Alert, Form, FormGroup, Input, FormText, Button,InputGroup,InputGroupText,InputGroupAddon,Label} from 'reactstrap';
 
-class MainForm extends React.Component {
+class NewContractForm extends React.Component {
   constructor(props) {
     super(props);
 
@@ -153,4 +153,4 @@ class MainForm extends React.Component {
   }
 }
 
-export default MainForm;
+export default NewContractForm;
