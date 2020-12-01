@@ -100,12 +100,12 @@ contract AffiliateSubcontract {
   function affiliateResolve() public onlyAffiliate {
     require(expiration <= block.timestamp, "Subcontract not yet expired.");
     require(affiliateResolved == false, "Affiliate already called resolve successfully on this subcontract.");
-    require(totalLastUpdated >= expiration, "Current total is not up to date, affiliate must call updateCurrentTotal().");
     AffiliateContract mainContract = AffiliateContract(owner);
     require(mainContract.contractExpiration() > block.timestamp, "Main contract expired.");
     uint totalSubcontracts = mainContract.totalSubcontracts();
     // If this is the final subcontract or if the seller has already made the next subcontract, we can cash out now.
     if ((indexNumber + 1) == totalSubcontracts || nextSubcontract != address(0x0)) {
+      require(totalLastUpdated >= expiration, "Current total is not up to date, affiliate must call updateCurrentTotal().");
       // PLACEHOLDER
       uint amount = 0;
       affiliate.transfer(amount);

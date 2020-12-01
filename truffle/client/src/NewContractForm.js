@@ -1,10 +1,9 @@
-import React, {Fragment} from 'react';
+import React from 'react';
 import {Alert, Form, FormGroup, Input, FormText, Button,InputGroup,InputGroupText,InputGroupAddon,Label} from 'reactstrap';
 
 class NewContractForm extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = {
       //total funds for full agreement
       totalFunds: 0,
@@ -23,7 +22,9 @@ class NewContractForm extends React.Component {
       //comission rate, %
       rate: 5,
       //Incentive fee amount
-      IF: 3
+      IF: 3,
+      // Oracle address
+      oracleAddress: ' '
     };
     this.handleInputChange = this.handleInputChange.bind(this)
   }
@@ -46,12 +47,17 @@ class NewContractForm extends React.Component {
     console.log(this.state)
   }
 
+  handleSubmit(event) {
+
+  }
+
   render() {
     return(<React.Fragment>
-    <Form id="inputForm">
-      <h3>Apply for a contract</h3>
-        <FormGroup>
-        <Label for="affWallet">Ethereum Wallet Address</Label>
+    <Form id="inputForm" onSubmit={ this.handleSubmit }>
+      <h2>Create a new affiliate contract</h2>
+      <h3>The current account in Metamask will be the owner of this contract.</h3>
+      <FormGroup>
+        <Label for="affWallet">Affiliate's Ethereum Wallet Address</Label>
         <Input
           type="text"
           name = "affWallet"
@@ -59,9 +65,20 @@ class NewContractForm extends React.Component {
           onChange={this.handleInputChange}
           id="affWallet"
           //placeholder="buyerId" 
-          />
-        </FormGroup>
-        <FormGroup>
+        />
+      </FormGroup>
+      <FormGroup>
+        <Label for="affWallet">Oracle Address</Label>
+        <Input
+          type="text"
+          name = "oracleAddress"
+          defaultValue={this.state.oracleAddress}
+          onChange={this.handleInputChange}
+          id="oracleAddress"
+          //placeholder="buyerId" 
+        />
+      </FormGroup>
+      <FormGroup>
         <Label for="totalFunds">Maximum Potential Earnings (eth)</Label>
         <Input
           type="number"
@@ -73,9 +90,9 @@ class NewContractForm extends React.Component {
           max={100}
           step={.1}
           //placeholder="buyerId" 
-          />
-        </FormGroup>
-        <FormGroup>
+        />
+      </FormGroup>
+      <FormGroup>
         <Label for="nSubcontracts">Number of Subcontracts</Label>
         <Input
           type="number"
@@ -83,13 +100,13 @@ class NewContractForm extends React.Component {
           defaultValue={this.state.nSubcontracts}
           onChange={this.handleInputChange}
           id="nSubcontracts"
-          min={0} 
+          min={3} 
           max={100}
           step={1}
           //placeholder="buyerId" 
-          />
-        </FormGroup>
-        <FormGroup>
+        />
+      </FormGroup>
+      <FormGroup>
         <Label for="totalDuration">Incentive Fee amount (eth)</Label>
         <Input
           type="number"
@@ -101,10 +118,9 @@ class NewContractForm extends React.Component {
           max={100}
           step={1}
           //placeholder="buyerId" 
-          />
-          
-        </FormGroup>
-        <FormGroup>
+        />
+      </FormGroup>
+      <FormGroup>
         <Label for="rate">Commission Rate</Label>
         <Input
           type="number"
@@ -116,10 +132,9 @@ class NewContractForm extends React.Component {
           max={100}
           step={.5}
           //placeholder="buyerId" 
-          />
-        </FormGroup>
-
-        <FormGroup>
+        />
+      </FormGroup>
+      <FormGroup>
         <Label for="SGPlen">Seller Grace Period Length (hours)</Label>
         <Input
           type="number"
@@ -131,9 +146,9 @@ class NewContractForm extends React.Component {
           max={24}
           step={1}
           //placeholder="buyerId" 
-          />
-        </FormGroup>
-        <FormGroup>
+        />
+      </FormGroup>
+      <FormGroup>
         <Label for="AGPlen">Affiliate Grace Period Length (days)</Label>
         <Input
           type="number"
@@ -141,12 +156,12 @@ class NewContractForm extends React.Component {
           defaultValue={this.state.AGPlen}
           onChange={this.handleInputChange}
           id="AGPlen"
-          min={3} 
+          min={0} 
           max={30}
           step={1}
           //placeholder="buyerId" 
-          />
-        </FormGroup>
+        />
+      </FormGroup>
       <Button color="primary" type='submit' form='inputForm'>Submit</Button>
     </Form>
     </React.Fragment>)
