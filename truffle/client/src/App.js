@@ -3,6 +3,9 @@ import {TabContent, TabPane, Nav, NavItem, NavLink} from 'reactstrap';
 
 import getWeb3 from "./getWeb3";
 import NewContractForm from "./NewContractForm.js";
+import ContractInfoForm from "./ContractInfoForm.js";
+import AffiliateActionsForm from "./AffiliateActionsForm.js";
+import OwnerActionsForm from "./OwnerActionsForm.js";
 
 var contract = require("@truffle/contract");
 const AffiliateContractJSON = require('./contracts/AffiliateContract.json')
@@ -79,21 +82,37 @@ class App extends Component {
         <Nav tabs>
           <NavItem>
             <NavLink onClick={() => this.handleSelect('1')}>
-              Create new contract
+              Get info about existing contract or subcontract
             </NavLink>
           </NavItem>
           <NavItem>
             <NavLink onClick={() => this.handleSelect('2')}>
-              Check status of existing contract
+              Create new contract
+            </NavLink>
+          </NavItem>
+          <NavItem>
+            <NavLink onClick={() => this.handleSelect('3')}>
+              Affiliate actions
+            </NavLink>
+          </NavItem>
+          <NavItem>
+            <NavLink onClick={() => this.handleSelect('4')}>
+              Owner actions
             </NavLink>
           </NavItem>
         </Nav>
         <TabContent activeTab={this.state.activeKey}>
           <TabPane tabId="1">
-            <NewContractForm />
+            <ContractInfoForm web3={this.state.web3}/>
           </TabPane>
           <TabPane tabId="2">
-            test
+            <NewContractForm web3={this.state.web3}/>
+          </TabPane>
+          <TabPane tabId="3">
+            <AffiliateActionsForm web3={this.state.web3}/>
+          </TabPane>
+          <TabPane tabId="4">
+            <OwnerActionsForm web3={this.state.web3}/>
           </TabPane>
         </TabContent>
       </div>

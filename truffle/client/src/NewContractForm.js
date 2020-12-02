@@ -1,9 +1,13 @@
 import React from 'react';
-import {Alert, Form, FormGroup, Input, FormText, Button,InputGroup,InputGroupText,InputGroupAddon,Label} from 'reactstrap';
+import {Form, FormGroup, Input, FormText, Button,InputGroup,InputGroupText,InputGroupAddon,Label} from 'reactstrap';
+var contract = require("@truffle/contract");
+
+const AffiliateContractJSON = require('./contracts/AffiliateContract.json')
 
 class NewContractForm extends React.Component {
   constructor(props) {
     super(props);
+    this.web3 = props.web3
     this.state = {
       //total funds for full agreement
       totalFunds: 0,
@@ -17,8 +21,8 @@ class NewContractForm extends React.Component {
       affWallet: ' ',
       //length of seller grace period after each SC period, hours
       SGPlen: 1,
-      //length of affilate grace period after last SC period, days
-      AGPlen: 7,
+      //length of each subcontract in days
+      SClen: 7,
       //comission rate, %
       rate: 5,
       //Incentive fee amount
@@ -27,11 +31,13 @@ class NewContractForm extends React.Component {
       oracleAddress: ' '
     };
     this.handleInputChange = this.handleInputChange.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
   }
 
   handleChange(e, name) {
     this.state[name] = e.target.value;
     this.setState(this.state);
+    
   }
 
   handleInputChange(event) {
@@ -47,8 +53,12 @@ class NewContractForm extends React.Component {
     console.log(this.state)
   }
 
-  handleSubmit(event) {
-
+  async handleSubmit(event) {
+    // all form input values need to be validated by this point
+    const accounts = await this.web3.eth.getAccounts()
+    var AffiliateContract = contract({abi: AffiliateContractJSON.abi, bytecode: AffiliateContractJSON.bytecode});
+    AffiliateContract.setProvider(this.web3.currentProvider);
+    //var newContract = await AffiliateContract.new()
   }
 
   render() {
@@ -149,13 +159,13 @@ class NewContractForm extends React.Component {
         />
       </FormGroup>
       <FormGroup>
-        <Label for="AGPlen">Affiliate Grace Period Length (days)</Label>
+        <Label for="SClen">Subcontract duration (days)</Label>
         <Input
           type="number"
-          name = "AGPlen"
-          defaultValue={this.state.AGPlen}
+          name = "SClen"
+          defaultValue={this.state.SClen}
           onChange={this.handleInputChange}
-          id="AGPlen"
+          id="SClen"
           min={0} 
           max={30}
           step={1}
