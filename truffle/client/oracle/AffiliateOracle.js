@@ -85,9 +85,10 @@ async function retrieveAffiliateTotal(affiliate, startTime, endTime) {
   //get sales record
   let obj = await getJSON(url)
   //filter relevant sales and sum
+  
   var data = JSON.parse(JSON.stringify(obj), function(key, value) { 
-    if ( value.affiliate_code === affcode ) total+=(parseInt(value.total)); 
-    return value; })
+    if ( value.affiliate_code === affcode && Date.parse(value.timestamp)/1000 >= startTime && Date.parse(value.timestamp)/1000 < endTime ) total+=(parseInt(value.total)); 
+    return value; }) 
   console.log(total)
   return total.toString();
 }
