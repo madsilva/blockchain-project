@@ -9,7 +9,7 @@ const OracleJSON = require('./oracle/build/contracts/EthPriceOracle.json')
 var pendingRequests = []
 const bent = require('bent');
 //Location of file with simulated api response from python code
-var url="http://127.0.0.1:8887/pythonProject/test.json";
+var url="http://127.0.0.1:8887/test.json";
 const getJSON = bent('json');
 //the affiliate code to look for in the file
 var affcode="testbbbb"
