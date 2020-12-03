@@ -19,6 +19,7 @@ class ContractInfoForm extends React.Component {
       subcontractIndex: 0
     }
     this.handleInputChange = this.handleInputChange.bind(this)
+    this.handleMainContractInfo = this.handleMainContractInfo.bind(this)
   }
 
   handleInputChange(event) {
@@ -27,8 +28,15 @@ class ContractInfoForm extends React.Component {
     this.setState(this.state)
   }
 
-  handleMainContractInfo(event) {
-
+  async handleMainContractInfo(event) {
+    const accounts = await this.web3.eth.getAccounts()
+    var address = this.state.mainContractAddress.trim()
+    var mainContract = await this.affiliateContract.at(address)
+    mainContract.getMainContractStateInfo({from: accounts[0]}).then(function(result) {
+      console.log(result)
+      console.log(result.logs[0].args.currentSubcontract)
+      console.log(result.logs[0].args.expiration)
+    })
   }
 
   handleMainContractParams(event) {
