@@ -20,6 +20,8 @@ class ContractInfoForm extends React.Component {
     }
     this.handleInputChange = this.handleInputChange.bind(this)
     this.handleMainContractInfo = this.handleMainContractInfo.bind(this)
+    this.handleSubcontractIndex = this.handleSubcontractIndex.bind(this)
+    this.handleSubcontractInfo = this.handleSubcontractInfo.bind(this)
   }
 
   handleInputChange(event) {
@@ -32,23 +34,30 @@ class ContractInfoForm extends React.Component {
     const accounts = await this.web3.eth.getAccounts()
     var address = this.state.mainContractAddress.trim()
     var mainContract = await this.affiliateContract.at(address)
-    mainContract.getMainContractStateInfo({from: accounts[0]}).then(function(result) {
+    var affiliate = await mainContract.affiliate.call()
+    console.log(affiliate)
+    var currentSubcontract = await mainContract.getCurrentSubcontract.call()
+    console.log(currentSubcontract)
+  }
+
+  async handleSubcontractIndex(event) {
+    const accounts = await this.web3.eth.getAccounts()
+    var address = this.state.mainContractAddress.trim()
+    var mainContract = await this.affiliateContract.at(address)
+    console.log("index: " + this.state.subcontractIndex)
+    mainContract.subcontracts.call(this.state.subcontractIndex).then(function(result) {
       console.log(result)
-      console.log(result.logs[0].args.currentSubcontract)
-      console.log(result.logs[0].args.expiration)
     })
   }
 
-  handleMainContractParams(event) {
-
-  }
-
-  handleSubcontractIndex(event) {
-
-  }
-
-  handleSubcontractInfo(event) {
-
+  async handleSubcontractInfo(event) {
+    const accounts = await this.web3.eth.getAccounts()
+    var address = this.state.subcontractAddress.trim()
+    var subcontract = await this.affiliateSubcontract.at(address)
+    var expiration = await subcontract.expiration.call()
+    console.log(expiration)
+    var nextSubcontract = await subcontract.nextSubcontract.call()
+    console.log(nextSubcontract)
   }
 
   render() {
@@ -66,8 +75,6 @@ class ContractInfoForm extends React.Component {
             id="mainContractAddress"
           />
           <Button color="primary" form='inputForm' onClick={ this.handleMainContractInfo }>Get main contract info</Button>
-          <br />
-          <Button color="primary" form='inputForm' onClick={ this.handleMainContractParams }>Get main contract parameters</Button>
           <br />
           <Label for="subcontractIndex">Subcontract index</Label>
           <Input

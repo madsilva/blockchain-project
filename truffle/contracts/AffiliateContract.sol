@@ -18,7 +18,7 @@ contract AffiliateContract {
   // The total number of subcontracts that can be created from this one.
   uint public immutable totalSubcontracts;
   // The number of the latest created subcontract.
-  uint internal subcontractsSoFar = 0;
+  uint public subcontractsSoFar = 0;
   // Array containing the subcontracts
   // Storage array (by default)
   address payable[] public subcontracts;
@@ -88,14 +88,12 @@ contract AffiliateContract {
     oracle = _oracleAddress;
   }
 
-  event GetMainContractStateInfoEvent(address payable currentSubcontract, uint subsSoFar, uint256 expiration);
-
-  function getMainContractStateInfo() public {
-    address payable currentSubcontract = address(0x0);
+  function getCurrentSubcontract() public view returns(address payable) {
     if (subcontractsSoFar > 0) {
-      currentSubcontract = subcontracts[subcontractsSoFar - 1];
+      return subcontracts[subcontractsSoFar - 1];
+    } else {
+      return address(0x0);
     }
-    emit GetMainContractStateInfoEvent(currentSubcontract, subcontractsSoFar, contractExpiration);
   }
 
   // called by the owner
