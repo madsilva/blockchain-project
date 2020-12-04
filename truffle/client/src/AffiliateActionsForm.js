@@ -31,6 +31,8 @@ class AffiliateActionsForm extends React.Component {
     subcontract.affiliateResolve({from: accounts[0]}).then(function(result) {
       console.log("did it")
       console.log(result)
+    }).catch(function(err) {
+      alert("ERROR! " + err.message);
     })
   }
 

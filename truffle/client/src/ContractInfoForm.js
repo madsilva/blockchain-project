@@ -31,7 +31,6 @@ class ContractInfoForm extends React.Component {
   }
 
   async handleMainContractInfo(event) {
-    const accounts = await this.web3.eth.getAccounts()
     var address = this.state.mainContractAddress.trim()
     var mainContract = await this.affiliateContract.at(address)
     var affiliate = await mainContract.affiliate.call()
@@ -41,17 +40,17 @@ class ContractInfoForm extends React.Component {
   }
 
   async handleSubcontractIndex(event) {
-    const accounts = await this.web3.eth.getAccounts()
     var address = this.state.mainContractAddress.trim()
     var mainContract = await this.affiliateContract.at(address)
     console.log("index: " + this.state.subcontractIndex)
     mainContract.subcontracts.call(this.state.subcontractIndex).then(function(result) {
       console.log(result)
+    }).catch(function(err) {
+      alert("ERROR! " + err.message);
     })
   }
 
   async handleSubcontractInfo(event) {
-    const accounts = await this.web3.eth.getAccounts()
     var address = this.state.subcontractAddress.trim()
     var subcontract = await this.affiliateSubcontract.at(address)
     var expiration = await subcontract.expiration.call()
