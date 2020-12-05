@@ -26,7 +26,7 @@ def sale(affiliate_code,delay):
       "slug": "eth-physical-order-testing-w-options",
       "state": state,
       "thumbnail": ''.join(random.choices(string.ascii_uppercase + string.ascii_lowercase + string.digits, k=46)),
-      "timestamp": datetime.datetime.utcnow().replace(microsecond=0).isoformat(),
+      "timestamp": datetime.datetime.now(datetime.timezone.utc).replace(microsecond=0).isoformat(),
       "title": "ETH physical order testing w/ options",
       "total": str(random.randint(10000,99999999)),
       "unreadChatMessages": 0}

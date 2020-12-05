@@ -82,14 +82,38 @@ async function setAffiliateTotal (oracleContract, callerAddress, ownerAddress, a
 
 async function retrieveAffiliateTotal(affiliate, startTime, endTime) {
   total=0
+  total2=0
   //get sales record
   let obj = await getJSON(url)
+
+  /*try {
+    var startiso = new Date(startTime*1000).toISOString();
+    var endiso = new Date(endTime*1000).toISOString();
+    console.log(startTime)
+    console.log(startiso)
+    console.log(endTime)
+    console.log(endiso)
+  } catch (error){
+    console.log(error)
+  }*/
   //filter relevant sales and sum
-  
   var data = JSON.parse(JSON.stringify(obj), function(key, value) { 
-    if ( value.affiliate_code === affcode && Date.parse(value.timestamp)/1000 >= startTime && Date.parse(value.timestamp)/1000 < endTime ) total+=(parseInt(value.total)); 
+
+    /*if ( (value.affiliate_code === affcode) ) {
+      total2+=(parseInt(value.total)); 
+      console.log((Date.parse(value.timestamp)/1000))
+      console.log(startTime)
+      console.log((Date.parse(value.timestamp)/1000 >= startTime))
+      console.log(endTime)
+      console.log((Date.parse(value.timestamp)/1000 < endTime))
+   }*/
+    if ( (value.affiliate_code === affcode) && (Date.parse(value.timestamp)/1000 >= startTime) && (Date.parse(value.timestamp)/1000 < endTime) ) {
+       total+=(parseInt(value.total)); 
+       console.log("true")
+    }
     return value; }) 
   console.log(total)
+  //console.log(total2)
   return total.toString();
 }
 
