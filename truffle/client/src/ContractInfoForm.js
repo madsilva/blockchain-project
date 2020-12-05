@@ -14,12 +14,13 @@ class ContractInfoForm extends React.Component {
     this.affiliateContract.setProvider(this.web3.currentProvider)
     this.affiliateSubcontract.setProvider(this.web3.currentProvider)
     this.state = {
-      mainContractAddress: ' ',
-      subcontractAddress: ' ',
+      mainContractAddress: '',
+      subcontractAddress: '',
       subcontractIndex: 0
     }
     this.handleInputChange = this.handleInputChange.bind(this)
     this.handleMainContractInfo = this.handleMainContractInfo.bind(this)
+    this.handleMainContractParams = this.handleMainContractParams.bind(this)
     this.handleSubcontractIndex = this.handleSubcontractIndex.bind(this)
     this.handleSubcontractInfo = this.handleSubcontractInfo.bind(this)
   }
@@ -31,31 +32,37 @@ class ContractInfoForm extends React.Component {
   }
 
   async handleMainContractInfo(event) {
-    var address = this.state.mainContractAddress.trim()
-    var mainContract = await this.affiliateContract.at(address)
-    var affiliate = await mainContract.affiliate.call()
+    const mainContract = await this.affiliateContract.at(this.state.mainContractAddress.trim())
+    const affiliate = await mainContract.affiliate.call()
     console.log(affiliate)
-    var currentSubcontract = await mainContract.getCurrentSubcontract.call()
+    const currentSubcontract = await mainContract.getCurrentSubcontract.call()
     console.log(currentSubcontract)
   }
 
+  async handleMainContractParams(event) {
+    try {
+      const mainContract = await this.affiliateContract.at(this.state.mainContractAddress.trim())
+      const totalSubcontracts = await mainContract.totalSubcontracts.call()
+      console.log(totalSubcontracts)
+    } catch(err) {
+      console.log(err)
+    } 
+  }
+
   async handleSubcontractIndex(event) {
-    var address = this.state.mainContractAddress.trim()
-    var mainContract = await this.affiliateContract.at(address)
-    console.log("index: " + this.state.subcontractIndex)
+    const mainContract = await this.affiliateContract.at(this.state.mainContractAddress.trim())
     mainContract.subcontracts.call(this.state.subcontractIndex).then(function(result) {
       console.log(result)
     }).catch(function(err) {
-      alert("ERROR! " + err.message);
+      alert("ERROR! " + err.message)
     })
   }
 
   async handleSubcontractInfo(event) {
-    var address = this.state.subcontractAddress.trim()
-    var subcontract = await this.affiliateSubcontract.at(address)
-    var expiration = await subcontract.expiration.call()
+    const subcontract = await this.affiliateSubcontract.at(this.state.subcontractAddress.trim())
+    const expiration = await subcontract.expiration.call()
     console.log(expiration)
-    var nextSubcontract = await subcontract.nextSubcontract.call()
+    const nextSubcontract = await subcontract.nextSubcontract.call()
     console.log(nextSubcontract)
   }
 
@@ -74,6 +81,7 @@ class ContractInfoForm extends React.Component {
             id="mainContractAddress"
           />
           <Button color="primary" form='inputForm' onClick={ this.handleMainContractInfo }>Get main contract info</Button>
+          <Button color="primary" form='inputForm' onClick={ this.handleMainContractParams }>Get main contract parameters</Button>
           <br />
           <Label for="subcontractIndex">Subcontract index</Label>
           <Input
@@ -101,4 +109,4 @@ class ContractInfoForm extends React.Component {
   }
 }
 
-export default ContractInfoForm;
+export default ContractInfoForm

@@ -36,12 +36,11 @@ class OwnerActionsForm extends React.Component {
 
   async handleCreateNextSubcontract(event) {
     const account = await this.getAccount()
-    const address = this.state.mainContractAddress.trim()
-    const mainContract = await this.affiliateContract.at(address)
+    const mainContract = await this.affiliateContract.at(this.state.mainContractAddress.trim())
     mainContract.createNextSubContract({from: account, value: this.state.txValue}).then(function(result) {
       console.log(result)
     }).catch(function(err) {
-      alert("ERROR! " + err.message);
+      alert("ERROR! " + err.message)
     })
   }
 
@@ -51,7 +50,7 @@ class OwnerActionsForm extends React.Component {
     mainContract.sellerResolve({from: account}).then(function(result) {
       console.log(result)
     }).catch(function(err) {
-      alert("ERROR! " + err.message);
+      alert("ERROR! " + err.message)
     })
   }
 

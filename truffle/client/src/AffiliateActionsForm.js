@@ -14,30 +14,43 @@ class AffiliateActionsForm extends React.Component {
       subcontractAddress: ''
     }
     this.handleInputChange = this.handleInputChange.bind(this)
+    this.handleUpdateTotal = this.handleUpdateTotal.bind(this)
     this.handleResolveSubcontract = this.handleResolveSubcontract.bind(this)
   }
 
   handleInputChange(event) {
-    const {name, value} = event.target;
-    this.state[name]=value
+    const {name, value} = event.target
+    this.state[name] = value
     this.setState(this.state)
   }
 
-  async handleResolveSubcontract(event) {
-    console.log("resolve sc")
+  async getAccount() {
     const accounts = await this.web3.eth.getAccounts()
-    var address = this.state.subcontractAddress.trim()
-    var subcontract = await this.affiliateSubcontract.at(address)
-    subcontract.affiliateResolve({from: accounts[0]}).then(function(result) {
-      console.log("did it")
+    if (accounts.length > 0) {
+      return accounts[0]
+    } else {
+      return null
+    }
+  }
+
+  async handleUpdateTotal(event) {
+    const account = await this.getAccount()
+    const subcontract = await this.affiliateSubcontract.at(this.state.subcontractAddress.trim())
+    subcontract.updateCurrentTotal({from: account}).then(function(result) {
       console.log(result)
     }).catch(function(err) {
-      alert("ERROR! " + err.message);
+      alert("ERROR! " + err.message)
     })
   }
 
-  handleUpdateTotal(event) {
-    console.log("update total!")
+  async handleResolveSubcontract(event) {
+    const account = await this.getAccount()
+    const subcontract = await this.affiliateSubcontract.at(this.state.subcontractAddress.trim())
+    subcontract.affiliateResolve({from: account}).then(function(result) {
+      console.log(result)
+    }).catch(function(err) {
+      alert("ERROR! " + err.message)
+    })
   }
 
   render() {
@@ -52,16 +65,13 @@ class AffiliateActionsForm extends React.Component {
           defaultValue={this.state.subcontractAddress}
           onChange={this.handleInputChange}
           id="subcontractAddress"
-          //placeholder="buyerId" 
         />
       </FormGroup>
-      
       <Button color="primary" form='inputForm' onClick={ this.handleUpdateTotal }>Update total</Button>
       <Button color="primary" form='inputForm' onClick={ this.handleResolveSubcontract }>Resolve subcontract</Button>
-
     </Form>
     </React.Fragment>)
   }
 }
 
-export default AffiliateActionsForm;
+export default AffiliateActionsForm
