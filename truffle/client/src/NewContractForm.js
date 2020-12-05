@@ -70,7 +70,7 @@ class NewContractForm extends React.Component {
 
   render() {
     return(<React.Fragment>
-    <Form id="inputForm" onSubmit={ this.handleSubmit }>
+    <Form id="inputForm">
       <h2>Create a new affiliate contract</h2>
       <h3>The current account in Metamask will be the owner of this contract.</h3>
       <FormGroup>
