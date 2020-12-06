@@ -1,45 +1,56 @@
-import React from 'react';
-import {Form, FormGroup, Input, FormText, Button,InputGroup,InputGroupText,InputGroupAddon,Label} from 'reactstrap';
-var contract = require("@truffle/contract");
+import React from 'react'
+import {Form, FormGroup, Input, Button, Label} from 'reactstrap'
 
-const AffiliateContractJSON = require('./contracts/AffiliateContract.json')
+var contract = require("@truffle/contract")
+const AffiliateSubcontractJSON = require('./contracts/AffiliateSubcontract.json')
 
 class AffiliateActionsForm extends React.Component {
   constructor(props) {
-    super(props);
+    super(props)
     this.web3 = props.web3
+    this.affiliateSubcontract = contract({abi: AffiliateSubcontractJSON.abi})
+    this.affiliateSubcontract.setProvider(this.web3.currentProvider)
     this.state = {
-      // main contract address
-      subcontractAddress: ' '
-    };
+      subcontractAddress: ''
+    }
     this.handleInputChange = this.handleInputChange.bind(this)
-  }
-
-  handleChange(e, name) {
-    this.state[name] = e.target.value;
-    this.setState(this.state);
-    
+    this.handleUpdateTotal = this.handleUpdateTotal.bind(this)
+    this.handleResolveSubcontract = this.handleResolveSubcontract.bind(this)
   }
 
   handleInputChange(event) {
-    const {name, value} = event.target;
-    console.log(name);
-    console.log(value);
-    this.state[name]=value
+    const {name, value} = event.target
+    this.state[name] = value
     this.setState(this.state)
-    //this.setState({[name]: value}), () => (console.log(this.state));
-    //if((name=='totalFunds') || (name=='nSubcontracts')){
-    //  this.state[SCfunds] = this.state[totalFunds]/this.state[nSubcontracts];
- //} 
-    console.log(this.state)
+  }
+
+  async getAccount() {
+    const accounts = await this.web3.eth.getAccounts()
+    if (accounts.length > 0) {
+      return accounts[0]
+    } else {
+      return null
+    }
+  }
+
+  async handleUpdateTotal(event) {
+    const account = await this.getAccount()
+    const subcontract = await this.affiliateSubcontract.at(this.state.subcontractAddress.trim())
+    subcontract.updateCurrentTotal({from: account}).then(function(result) {
+      console.log(result)
+    }).catch(function(err) {
+      alert("ERROR! " + err.message)
+    })
   }
 
   async handleResolveSubcontract(event) {
-    console.log("resolve sc")
-  }
-
-  handleUpdateTotal(event) {
-    console.log("update total!")
+    const account = await this.getAccount()
+    const subcontract = await this.affiliateSubcontract.at(this.state.subcontractAddress.trim())
+    subcontract.affiliateResolve({from: account}).then(function(result) {
+      console.log(result)
+    }).catch(function(err) {
+      alert("ERROR! " + err.message)
+    })
   }
 
   render() {
@@ -54,16 +65,13 @@ class AffiliateActionsForm extends React.Component {
           defaultValue={this.state.subcontractAddress}
           onChange={this.handleInputChange}
           id="subcontractAddress"
-          //placeholder="buyerId" 
         />
       </FormGroup>
-      
       <Button color="primary" form='inputForm' onClick={ this.handleUpdateTotal }>Update total</Button>
       <Button color="primary" form='inputForm' onClick={ this.handleResolveSubcontract }>Resolve subcontract</Button>
-
     </Form>
     </React.Fragment>)
   }
 }
 
-export default AffiliateActionsForm;
+export default AffiliateActionsForm
