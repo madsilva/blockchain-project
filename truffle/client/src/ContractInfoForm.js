@@ -32,11 +32,15 @@ class ContractInfoForm extends React.Component {
   }
 
   async handleMainContractInfo(event) {
-    const mainContract = await this.affiliateContract.at(this.state.mainContractAddress.trim())
-    const affiliate = await mainContract.affiliate.call()
-    console.log(affiliate)
-    const currentSubcontract = await mainContract.getCurrentSubcontract.call()
-    console.log(currentSubcontract)
+    try {
+      const mainContract = await this.affiliateContract.at(this.state.mainContractAddress.trim())
+      const affiliate = await mainContract.affiliate.call()
+      console.log(affiliate)
+      const currentSubcontract = await mainContract.getCurrentSubcontract.call()
+      console.log(currentSubcontract)
+    } catch(err) {
+      console.log(err)
+    }
   }
 
   async handleMainContractParams(event) {
@@ -50,20 +54,25 @@ class ContractInfoForm extends React.Component {
   }
 
   async handleSubcontractIndex(event) {
-    const mainContract = await this.affiliateContract.at(this.state.mainContractAddress.trim())
-    mainContract.subcontracts.call(this.state.subcontractIndex).then(function(result) {
+    try {
+      const mainContract = await this.affiliateContract.at(this.state.mainContractAddress.trim())
+      const result = await mainContract.subcontracts.call(this.state.subcontractIndex)
       console.log(result)
-    }).catch(function(err) {
-      alert("ERROR! " + err.message)
-    })
+    } catch(err) {
+      console.log(err)
+    }
   }
 
   async handleSubcontractInfo(event) {
-    const subcontract = await this.affiliateSubcontract.at(this.state.subcontractAddress.trim())
-    const expiration = await subcontract.expiration.call()
-    console.log(expiration)
-    const nextSubcontract = await subcontract.nextSubcontract.call()
-    console.log(nextSubcontract)
+    try {
+      const subcontract = await this.affiliateSubcontract.at(this.state.subcontractAddress.trim())
+      const expiration = await subcontract.expiration.call()
+      console.log(expiration)
+      const nextSubcontract = await subcontract.nextSubcontract.call()
+      console.log(nextSubcontract)
+    } catch(err) {
+      console.log(err)
+    }
   }
 
   render() {

@@ -15,17 +15,17 @@ class NewContractForm extends React.Component {
       affiliateAddress: '',
       // Oracle address
       oracleAddress: '',
-      // funds staked per SC
+      // funds staked per SC in ether
       subcontractStake: 0,
       //number of subcontracts (minimum:3)
       totalSubcontracts: 3,
-      //length of each subcontract in days
+      //length of each subcontract in minutes
       subcontractDuration: 7,
-      //length of seller grace period after each SC period, hours
+      //length of seller grace period after each SC period in minutes
       sellerGracePeriodDuration: 1,
       //comission affiliateRate, %
       affiliateRate: 5,
-      //Incentive fee amount
+      //Incentive fee amount in ether
       incentiveFee: 3
     }
     this.handleInputChange = this.handleInputChange.bind(this)
@@ -50,19 +50,23 @@ class NewContractForm extends React.Component {
   async handleCreateNewContract(event) {
     try {
       const account = await this.getAccount()
-      const txVal = Number(this.state.incentiveFee) + Number(this.state.subcontractStake)
+      const txVal = String(Number(this.state.incentiveFee) + Number(this.state.subcontractStake))
+      // the subcontract duration and seller grace period duration need to be converted into seconds.
+      // currently they are both given in minutes
+      const subcontractDuration = Number(this.state.subcontractDuration) * 60
+      const sellerGracePeriodDuration = Number(this.state.sellerGracePeriodDuration) * 60
       const newContract = await this.affiliateContract.new(
         this.state.affiliateAddress,
         this.state.oracleAddress,
         this.state.totalSubcontracts,
-        this.state.subcontractDuration,
-        this.state.sellerGracePeriodDuration,
-        this.state.subcontractStake,
-        this.state.incentiveFee,
+        subcontractDuration,
+        sellerGracePeriodDuration,
+        this.web3.utils.toWei(this.state.subcontractStake),
+        this.web3.utils.toWei(this.state.incentiveFee),
         this.state.affiliateRate,
-        {from: account, value: txVal}
+        {from: account, value: this.web3.utils.toWei(txVal)}
       )
-      console.log(newContract.address)
+      console.log("address: " + newContract.address)
     } catch(err) {
       console.log(err)
     }
@@ -94,7 +98,7 @@ class NewContractForm extends React.Component {
         />
       </FormGroup>
       <FormGroup>
-        <Label for="subcontractStake">Subcontract stake</Label>
+        <Label for="subcontractStake">Subcontract stake, in Ether</Label>
         <Input
           type="number"
           name = "subcontractStake"
@@ -106,7 +110,7 @@ class NewContractForm extends React.Component {
         />
       </FormGroup>
       <FormGroup>
-        <Label for="totalSubcontracts">Number of Subcontracts</Label>
+        <Label for="totalSubcontracts">Number of Subcontracts (min 3)</Label>
         <Input
           type="number"
           name = "totalSubcontracts"
@@ -119,7 +123,7 @@ class NewContractForm extends React.Component {
         />
       </FormGroup>
       <FormGroup>
-        <Label for="incentiveFee">Incentive Fee amount (eth)</Label>
+        <Label for="incentiveFee">Incentive Fee amount, in Ether</Label>
         <Input
           type="number"
           name = "incentiveFee"
@@ -131,7 +135,7 @@ class NewContractForm extends React.Component {
         />
       </FormGroup>
       <FormGroup>
-        <Label for="affiliateRate">Commission Rate</Label>
+        <Label for="affiliateRate">Commission Rate, as an integer percentage</Label>
         <Input
           type="number"
           name = "affiliateRate"
@@ -144,7 +148,7 @@ class NewContractForm extends React.Component {
         />
       </FormGroup>
       <FormGroup>
-        <Label for="sellerGracePeriodDuration">Seller Grace Period Length (hours)</Label>
+        <Label for="sellerGracePeriodDuration">Seller Grace Period Length, in minutes</Label>
         <Input
           type="number"
           name = "sellerGracePeriodDuration"
@@ -156,7 +160,7 @@ class NewContractForm extends React.Component {
         />
       </FormGroup>
       <FormGroup>
-        <Label for="subcontractDuration">Subcontract duration (days)</Label>
+        <Label for="subcontractDuration">Subcontract duration, in minutes</Label>
         <Input
           type="number"
           name = "subcontractDuration"

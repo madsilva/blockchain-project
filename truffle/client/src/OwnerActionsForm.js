@@ -35,23 +35,25 @@ class OwnerActionsForm extends React.Component {
   }
 
   async handleCreateNextSubcontract(event) {
-    const account = await this.getAccount()
-    const mainContract = await this.affiliateContract.at(this.state.mainContractAddress.trim())
-    mainContract.createNextSubContract({from: account, value: this.state.txValue}).then(function(result) {
+    try {
+      const account = await this.getAccount()
+      const mainContract = await this.affiliateContract.at(this.state.mainContractAddress.trim())
+      const result = await mainContract.createNextSubContract({from: account, value: this.web3.utils.toWei(this.state.txValue)})
       console.log(result)
-    }).catch(function(err) {
-      alert("ERROR! " + err.message)
-    })
+    } catch(err) {
+      console.log(err)
+    }
   }
 
   async handleResolveMainContract(event) {
-    const account = await this.getAccount()
-    const mainContract = this.affiliateContract.at(this.state.mainContractAddress.trim())
-    mainContract.sellerResolve({from: account}).then(function(result) {
+    try {
+      const account = await this.getAccount()
+      const mainContract = this.affiliateContract.at(this.state.mainContractAddress.trim())
+      const result = await mainContract.sellerResolve({from: account})
       console.log(result)
-    }).catch(function(err) {
-      alert("ERROR! " + err.message)
-    })
+    } catch(err) {
+      console.log(err)
+    }
   }
 
   render() {
@@ -70,7 +72,7 @@ class OwnerActionsForm extends React.Component {
         </FormGroup>
         <Button color="primary" form='inputForm' onClick={ this.handleResolveMainContract }>Resolve main contract</Button>
         <FormGroup>
-          <Label for="txValue">Transaction value (for create next subcontract)</Label>
+          <Label for="txValue">Transaction value (for create next subcontract), in Ether</Label>
           <Input
             type="text"
             name = "txValue"

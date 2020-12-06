@@ -34,23 +34,25 @@ class AffiliateActionsForm extends React.Component {
   }
 
   async handleUpdateTotal(event) {
-    const account = await this.getAccount()
-    const subcontract = await this.affiliateSubcontract.at(this.state.subcontractAddress.trim())
-    subcontract.updateCurrentTotal({from: account}).then(function(result) {
+    try {
+      const account = await this.getAccount()
+      const subcontract = await this.affiliateSubcontract.at(this.state.subcontractAddress.trim())
+      const result = await subcontract.updateCurrentTotal({from: account})
       console.log(result)
-    }).catch(function(err) {
-      alert("ERROR! " + err.message)
-    })
+    } catch(err) {
+      console.log(err)
+    }
   }
 
   async handleResolveSubcontract(event) {
-    const account = await this.getAccount()
-    const subcontract = await this.affiliateSubcontract.at(this.state.subcontractAddress.trim())
-    subcontract.affiliateResolve({from: account}).then(function(result) {
+    try {
+      const account = await this.getAccount()
+      const subcontract = await this.affiliateSubcontract.at(this.state.subcontractAddress.trim())
+      const result = await subcontract.affiliateResolve({from: account})
       console.log(result)
-    }).catch(function(err) {
-      alert("ERROR! " + err.message)
-    })
+    } catch(err) {
+      console.log(err)
+    }
   }
 
   render() {
