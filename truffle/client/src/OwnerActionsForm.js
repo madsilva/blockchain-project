@@ -48,7 +48,7 @@ class OwnerActionsForm extends React.Component {
   async handleResolveMainContract(event) {
     try {
       const account = await this.getAccount()
-      const mainContract = this.affiliateContract.at(this.state.mainContractAddress.trim())
+      const mainContract = await this.affiliateContract.at(this.state.mainContractAddress.trim())
       const result = await mainContract.sellerResolve({from: account})
       console.log(result)
     } catch(err) {
