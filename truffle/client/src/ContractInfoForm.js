@@ -32,38 +32,86 @@ class ContractInfoForm extends React.Component {
   }
 
   async handleMainContractInfo(event) {
-    const mainContract = await this.affiliateContract.at(this.state.mainContractAddress.trim())
-    const affiliate = await mainContract.affiliate.call()
-    console.log(affiliate)
-    const currentSubcontract = await mainContract.getCurrentSubcontract.call()
-    console.log(currentSubcontract)
+    try {
+      const mainContract = await this.affiliateContract.at(this.state.mainContractAddress.trim())
+      const subcontractsSoFar = await mainContract.subcontractsSoFar.call()
+      const mainContractExpiration = await mainContract.contractExpiration.call()
+      const subcontractStake = await mainContract.subcontractStake.call()
+      const currentSubcontract = await mainContract.getCurrentSubcontract.call()
+      const mainContractExpirationFormatted = new Date(mainContractExpiration * 1000).toLocaleString("en-US")
+      console.log("subcontractsSoFar: " + subcontractsSoFar)
+      console.log("mainContractExpiration: " + mainContractExpirationFormatted)
+      console.log("subcontractStake: " + this.web3.utils.fromWei(subcontractStake))
+      console.log("currentSubcontract: " + currentSubcontract)
+    } catch(err) {
+      console.log(err)
+    }
   }
 
   async handleMainContractParams(event) {
     try {
       const mainContract = await this.affiliateContract.at(this.state.mainContractAddress.trim())
+      const owner = await mainContract.owner.call()
+      const affiliate = await mainContract.affiliate.call()
       const totalSubcontracts = await mainContract.totalSubcontracts.call()
-      console.log(totalSubcontracts)
+      const subcontractDuration = await mainContract.subcontractDuration.call()
+      const gracePeriodDuration = await mainContract.gracePeriodDuration.call()
+      const incentiveFee = await mainContract.incentiveFee.call()
+      const affiliatePercentage = await mainContract.affiliatePercentage.call()
+      const oracle = await mainContract.oracle.call()
+      console.log("owner: " + owner)
+      console.log("affiliate: " + affiliate)
+      console.log("totalSubcontracts: " + totalSubcontracts)
+      console.log("subcontractDuration: " + subcontractDuration)
+      console.log("gracePeriodDuration: " + gracePeriodDuration)
+      console.log("incentiveFee: " + this.web3.utils.fromWei(incentiveFee))
+      console.log("affiliatePercentage: " + affiliatePercentage)
+      console.log("oracle: " + oracle)
     } catch(err) {
       console.log(err)
     } 
   }
 
   async handleSubcontractIndex(event) {
-    const mainContract = await this.affiliateContract.at(this.state.mainContractAddress.trim())
-    mainContract.subcontracts.call(this.state.subcontractIndex).then(function(result) {
-      console.log(result)
-    }).catch(function(err) {
-      alert("ERROR! " + err.message)
-    })
+    try {
+      const mainContract = await this.affiliateContract.at(this.state.mainContractAddress.trim())
+      const result = await mainContract.subcontracts.call(this.state.subcontractIndex)
+      console.log("Subcontract at given index: " + result)
+    } catch(err) {
+      console.log(err)
+    }
   }
 
   async handleSubcontractInfo(event) {
-    const subcontract = await this.affiliateSubcontract.at(this.state.subcontractAddress.trim())
-    const expiration = await subcontract.expiration.call()
-    console.log(expiration)
-    const nextSubcontract = await subcontract.nextSubcontract.call()
-    console.log(nextSubcontract)
+    try {
+      const subcontract = await this.affiliateSubcontract.at(this.state.subcontractAddress.trim())
+      const mainContractAddress = await subcontract.owner.call()
+      const subcontractExpiration = await subcontract.expiration.call()
+      const sellerGracePeriodEnd = await subcontract.sellerGracePeriodEnd.call()
+      const indexNumber = await subcontract.indexNumber.call()
+      const nextSubcontractAddress = await subcontract.nextSubcontract.call()
+      const affiliateResolved = await subcontract.affiliateResolved.call()
+      const gracePeriodExpired = await subcontract.gracePeriodExpired.call()
+      const currentTotal = await subcontract.currentTotal.call()
+      const totalLastUpdated = await subcontract.totalLastUpdated.call()
+      const startTime = await subcontract.startTime.call()
+      const subcontractExpirationFormatted = new Date(subcontractExpiration * 1000).toLocaleString("en-US")
+      const sellerGracePeriodEndFormatted = new Date(sellerGracePeriodEnd * 1000).toLocaleString("en-US")
+      const totalLastUpdatedFormatted = new Date(totalLastUpdated * 1000).toLocaleString("en-US")
+      const startTimeFormatted = new Date(startTime * 1000).toLocaleString("en-US")
+      console.log("mainContractAddress: " + mainContractAddress)
+      console.log("subcontractExpiration: " + subcontractExpirationFormatted)
+      console.log("sellerGracePeriodEnd: " + sellerGracePeriodEndFormatted)
+      console.log("indexNumber: " + indexNumber)
+      console.log("nextSubcontractAddress: " + nextSubcontractAddress)
+      console.log("affiliateResolved: " + affiliateResolved)
+      console.log("gracePeriodExpired: " + gracePeriodExpired)
+      console.log("currentTotal: " + currentTotal)
+      console.log("totalLastUpdated: " + totalLastUpdatedFormatted)
+      console.log("startTime: " + startTimeFormatted)
+    } catch(err) {
+      console.log(err)
+    }
   }
 
   render() {
