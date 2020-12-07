@@ -38,6 +38,10 @@ class ContractInfoForm extends React.Component {
       console.log(affiliate)
       const currentSubcontract = await mainContract.getCurrentSubcontract.call()
       console.log(currentSubcontract)
+      const expiration = await mainContract.contractExpiration.call()
+      console.log(expiration)
+      const affiliatePercentage = await mainContract.affiliatePercentage.call()
+      console.log(affiliatePercentage)
     } catch(err) {
       console.log(err)
     }

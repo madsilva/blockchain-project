@@ -67,6 +67,8 @@ class NewContractForm extends React.Component {
         {from: account, value: this.web3.utils.toWei(txVal)}
       )
       console.log("address: " + newContract.address)
+      const subcontract = await newContract.getCurrentSubcontract.call()
+      console.log("first subcontract: " + subcontract)
     } catch(err) {
       console.log(err)
     }
