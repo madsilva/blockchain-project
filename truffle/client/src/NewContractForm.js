@@ -47,6 +47,15 @@ class NewContractForm extends React.Component {
     }
   }
 
+  printErrorMessage(error) {
+    if (error.message.startsWith("Internal JSON-RPC error.")) {
+      const message = JSON.parse(error.message.replace("Internal JSON-RPC error.", ""))
+      console.log("Internal JSON-RPC error: " + message.message)
+    } else {
+      console.log(error)
+    }
+  }
+
   async handleCreateNewContract(event) {
     try {
       const account = await this.getAccount()
@@ -70,7 +79,7 @@ class NewContractForm extends React.Component {
       const subcontract = await newContract.getCurrentSubcontract.call()
       console.log("first subcontract: " + subcontract)
     } catch(err) {
-      console.log(err)
+      this.printErrorMessage(err)
     }
   }
 
