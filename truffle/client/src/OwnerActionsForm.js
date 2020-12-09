@@ -38,10 +38,21 @@ class OwnerActionsForm extends React.Component {
     try {
       const account = await this.getAccount()
       const mainContract = await this.affiliateContract.at(this.state.mainContractAddress.trim())
+      console.log("attempting gas")
+      const gas = await mainContract.createNextSubContract.estimateGas({from: account, value: this.web3.utils.toWei(this.state.txValue)})
+      console.log("gas")
+      console.log(gas)
       const result = await mainContract.createNextSubContract({from: account, value: this.web3.utils.toWei(this.state.txValue)})
       console.log(result)
     } catch(err) {
+      console.log("error")
       console.log(err)
+      /*
+      console.log("message")
+      console.log(JSON.parse(err))
+      console.log("here")
+      console.log("")
+      */
     }
   }
 
