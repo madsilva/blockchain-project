@@ -50,3 +50,37 @@ def appendsales(sellerKey,affiliate_code,norders,pcaff):
     fp.close()
     return
 
+def demo(sellerKey,affFilename="affcodes.txt",cycle=900):
+    tics=0
+    affFile = open(affFilename, "r")
+    affCodes = [(line.strip()).split() for line in affFile]
+    print(affCodes)
+    affFile.close()
+    record=newRecord(sellerKey,"",100,0)
+    newSales=[]
+    while(True):
+        time.sleep(1)
+        tics+=1
+        sample=random.sample(affCodes, random.randint(1, 1 + len(affCodes)//3))
+        for code in sample:
+            norders = random.randint(0,10)
+            pcaff = (sqrt(tics%cycle)/sqrt(cycle))-random.random()*(sqrt(tics%cycle)/sqrt(cycle))/2
+            newSales+=[sale(code[0] if random.random()<pcaff else "",0) for i in range(norders)]
+            print(f"added {norders} new sales")
+            #print(code)
+            #print(pcaff)
+        if tics%10==0:
+            with open(f'{sellerKey}.json', 'r+') as fp:
+                record = json.load(fp)
+                # print(record)
+                fp.seek(0)
+                record['sales'].append(newSales)
+                record["queryCount"] += len(newSales)
+                fp.truncate()
+                json.dump(record, fp)
+            fp.close()
+            print(f"wrote {len(newSales)} records")
+            newSales=[]
+            affFile = open(affFilename, "r")
+            affCodes = [(line.strip()).split() for line in affFile]
+            affFile.close()
