@@ -34,14 +34,24 @@ class OwnerActionsForm extends React.Component {
     }
   }
 
+  printErrorMessage(error) {
+    if (error.message.startsWith("Internal JSON-RPC error.")) {
+      const message = JSON.parse(error.message.replace("Internal JSON-RPC error.", ""))
+      console.log("Internal JSON-RPC error: " + message.message)
+    } else {
+      console.log(error)
+    }
+  }
+  
   async handleCreateNextSubcontract(event) {
     try {
       const account = await this.getAccount()
       const mainContract = await this.affiliateContract.at(this.state.mainContractAddress.trim())
+      await mainContract.createNextSubContract.estimateGas({from: account, value: this.web3.utils.toWei(this.state.txValue)})
       const result = await mainContract.createNextSubContract({from: account, value: this.web3.utils.toWei(this.state.txValue)})
       console.log(result)
     } catch(err) {
-      console.log(err)
+      this.printErrorMessage(err)
     }
   }
 
@@ -49,10 +59,11 @@ class OwnerActionsForm extends React.Component {
     try {
       const account = await this.getAccount()
       const mainContract = await this.affiliateContract.at(this.state.mainContractAddress.trim())
+      await mainContract.sellerResolve.estimateGas({from: account})
       const result = await mainContract.sellerResolve({from: account})
       console.log(result)
     } catch(err) {
-      console.log(err)
+      this.printErrorMessage(err)
     }
   }
 

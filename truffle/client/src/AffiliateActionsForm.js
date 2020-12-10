@@ -33,14 +33,24 @@ class AffiliateActionsForm extends React.Component {
     }
   }
 
+  printErrorMessage(error) {
+    if (error.message.startsWith("Internal JSON-RPC error.")) {
+      const message = JSON.parse(error.message.replace("Internal JSON-RPC error.", ""))
+      console.log("Internal JSON-RPC error: " + message.message)
+    } else {
+      console.log(error)
+    }
+  }
+
   async handleUpdateTotal(event) {
     try {
       const account = await this.getAccount()
       const subcontract = await this.affiliateSubcontract.at(this.state.subcontractAddress.trim())
+      await subcontract.updateCurrentTotal.estimateGas({from: account})
       const result = await subcontract.updateCurrentTotal({from: account})
       console.log(result)
     } catch(err) {
-      console.log(err)
+      this.printErrorMessage(err)
     }
   }
 
@@ -48,10 +58,11 @@ class AffiliateActionsForm extends React.Component {
     try {
       const account = await this.getAccount()
       const subcontract = await this.affiliateSubcontract.at(this.state.subcontractAddress.trim())
+      await subcontract.affiliateResolve.estimateGas({from: account})
       const result = await subcontract.affiliateResolve({from: account})
       console.log(result)
     } catch(err) {
-      console.log(err)
+      this.printErrorMessage(err)
     }
   }
 

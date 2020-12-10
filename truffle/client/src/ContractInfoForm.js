@@ -31,6 +31,15 @@ class ContractInfoForm extends React.Component {
     this.setState(this.state)
   }
 
+  printErrorMessage(error) {
+    if (error.message.startsWith("Internal JSON-RPC error.")) {
+      const message = JSON.parse(error.message.replace("Internal JSON-RPC error.", ""))
+      console.log("Internal JSON-RPC error: " + message.message)
+    } else {
+      console.log(error)
+    }
+  }
+
   async handleMainContractInfo(event) {
     try {
       const mainContract = await this.affiliateContract.at(this.state.mainContractAddress.trim())
@@ -38,9 +47,8 @@ class ContractInfoForm extends React.Component {
       const mainContractExpiration = await mainContract.contractExpiration.call()
       const subcontractStake = await mainContract.subcontractStake.call()
       const currentSubcontract = await mainContract.getCurrentSubcontract.call()
-      const mainContractExpirationFormatted = new Date(mainContractExpiration * 1000).toLocaleString("en-US")
       console.log("subcontractsSoFar: " + subcontractsSoFar)
-      console.log("mainContractExpiration: " + mainContractExpirationFormatted)
+      console.log("mainContractExpiration: " + new Date(mainContractExpiration * 1000).toLocaleString("en-US"))
       console.log("subcontractStake: " + this.web3.utils.fromWei(subcontractStake))
       console.log("currentSubcontract: " + currentSubcontract)
     } catch(err) {
@@ -65,7 +73,7 @@ class ContractInfoForm extends React.Component {
       console.log("subcontractDuration: " + subcontractDuration)
       console.log("gracePeriodDuration: " + gracePeriodDuration)
       console.log("incentiveFee: " + this.web3.utils.fromWei(incentiveFee))
-      console.log("affiliatePercentage: " + affiliatePercentage)
+      console.log("affiliatePercentage: " + affiliatePercentage + "%")
       console.log("oracle: " + oracle)
     } catch(err) {
       console.log(err)
@@ -75,10 +83,15 @@ class ContractInfoForm extends React.Component {
   async handleSubcontractIndex(event) {
     try {
       const mainContract = await this.affiliateContract.at(this.state.mainContractAddress.trim())
-      const result = await mainContract.subcontracts.call(this.state.subcontractIndex)
-      console.log("Subcontract at given index: " + result)
+      const subcontractsSoFar = await mainContract.subcontractsSoFar.call()
+      if (this.state.subcontractIndex >= subcontractsSoFar) {
+        console.log("Error: index out of range of existing subcontracts.")
+      } else {
+        const result = await mainContract.subcontracts.call(this.state.subcontractIndex)
+        console.log("Subcontract at given index: " + result)
+      }
     } catch(err) {
-      console.log(err)
+      this.printErrorMessage(err)
     }
   }
 
@@ -95,20 +108,16 @@ class ContractInfoForm extends React.Component {
       const currentTotal = await subcontract.currentTotal.call()
       const totalLastUpdated = await subcontract.totalLastUpdated.call()
       const startTime = await subcontract.startTime.call()
-      const subcontractExpirationFormatted = new Date(subcontractExpiration * 1000).toLocaleString("en-US")
-      const sellerGracePeriodEndFormatted = new Date(sellerGracePeriodEnd * 1000).toLocaleString("en-US")
-      const totalLastUpdatedFormatted = new Date(totalLastUpdated * 1000).toLocaleString("en-US")
-      const startTimeFormatted = new Date(startTime * 1000).toLocaleString("en-US")
       console.log("mainContractAddress: " + mainContractAddress)
-      console.log("subcontractExpiration: " + subcontractExpirationFormatted)
-      console.log("sellerGracePeriodEnd: " + sellerGracePeriodEndFormatted)
+      console.log("subcontractExpiration: " + new Date(subcontractExpiration * 1000).toLocaleString("en-US"))
+      console.log("sellerGracePeriodEnd: " + new Date(sellerGracePeriodEnd * 1000).toLocaleString("en-US"))
       console.log("indexNumber: " + indexNumber)
       console.log("nextSubcontractAddress: " + nextSubcontractAddress)
       console.log("affiliateResolved: " + affiliateResolved)
       console.log("gracePeriodExpired: " + gracePeriodExpired)
       console.log("currentTotal: " + currentTotal)
-      console.log("totalLastUpdated: " + totalLastUpdatedFormatted)
-      console.log("startTime: " + startTimeFormatted)
+      console.log("totalLastUpdated: " + new Date(totalLastUpdated * 1000).toLocaleString("en-US"))
+      console.log("startTime: " + new Date(startTime * 1000).toLocaleString("en-US"))
     } catch(err) {
       console.log(err)
     }
