@@ -3,6 +3,8 @@
 # dependencies
 /node_modules
 truffle/client/node_modules/
+truffle/client/oracle/test_json/__pycache__
+truffle/client/oracle/test_json/.idea
 /.pnp
 .pnp.js
 
