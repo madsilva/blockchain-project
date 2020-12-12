@@ -16,7 +16,8 @@ contract AffiliateSubcontract {
   uint public immutable sellerGracePeriodEnd;
 
   // What index this subcontract has in the array in the main contract.
-  uint public immutable indexNumber;
+  //TEMPPPPPPPPP
+  uint public indexNumber;
   // The address of the next subcontract when it gets created.
   address public nextSubcontract = address(0x0);
 
@@ -96,8 +97,9 @@ contract AffiliateSubcontract {
     if ((indexNumber + 1) == totalSubcontracts || nextSubcontract != address(0x0)) {
       require(totalLastUpdated >= expiration, "Current total is not up to date, affiliate must call updateCurrentTotal().");
       // PLACEHOLDER
-      uint amount = 0;
-      affiliate.transfer(amount);
+      uint earnings = mainContract.getAffiliateEarnings(currentTotal);
+      indexNumber = earnings;
+      affiliate.transfer(0);
       affiliateResolved = true;
     } else {
       // Else case - either the grace period isn't over and we're still waiting on the seller, or the seller has allowed it to pass without making the next subcontract.

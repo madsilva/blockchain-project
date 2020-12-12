@@ -32,8 +32,8 @@ contract AffiliateContract {
   uint public immutable subcontractStake;
   // The amount of the incentive fee staked by the seller to incentivize them to hold up their end of the deal.
   uint public immutable incentiveFee;
-  // An integer representing the percentage of sales that the affiliate will receive. 
-  uint public immutable affiliatePercentage;
+  // A byte array representing the percentage of sales that the affiliate will receive. 
+  bytes32 public affiliatePercentage;
 
   // The constructor should be called with the amount of the incentive fee plus the first contract stake.
   constructor(
@@ -45,7 +45,7 @@ contract AffiliateContract {
     uint _contractEndGracePeriodDuration,
     uint _subcontractStake,
     uint _incentiveFee,
-    uint _affiliatePercentage
+    bytes32 _affiliatePercentage
   ) payable {
     require(msg.value == (_incentiveFee + _subcontractStake), "Amount sent to constructor must equal incentive fee plus one subcontract stake");
     require(_totalSubcontracts >= MIN_TOTAL_SUBCONTRACTS, "Total subcontracts must be at least 3");
@@ -89,6 +89,19 @@ contract AffiliateContract {
     } else {
       return address(0x0);
     }
+  }
+
+  function getAffiliateEarnings(uint _rawTotal) public view returns(uint) {
+    uint rawTotal = _rawTotal;
+    uint earnings = 0;
+    for (uint i = 32; i >= 1; i--) {
+      byte bit = "1";
+      if (affiliatePercentage[i - 1] == bit) {
+        earnings += rawTotal;
+      }
+      rawTotal = rawTotal >> 1;
+    }
+    return earnings;
   }
 
   function createNextSubContract() public payable onlyOwner contractNotExpired {
