@@ -8,6 +8,7 @@ import random
 import string
 import datetime
 import time
+from math import sqrt
 
 def sale(affiliate_code,delay):
     state=random.choice(["AWAITING_FULFILLMENT","AWAITING_PAYMENT","COMPLETE"])

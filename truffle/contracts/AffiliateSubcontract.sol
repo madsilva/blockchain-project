@@ -11,9 +11,9 @@ contract AffiliateSubcontract {
   address payable public immutable affiliate;
 
   // The time this contract expires.
-  uint256 public immutable expiration;
+  uint public immutable expiration;
   // The time the seller's grace period ends. 
-  uint256 public immutable sellerGracePeriodEnd;
+  uint public immutable sellerGracePeriodEnd;
 
   // What index this subcontract has in the array in the main contract.
   uint public immutable indexNumber;
@@ -26,25 +26,25 @@ contract AffiliateSubcontract {
   bool public gracePeriodExpired = false;
 
   // The most recent value for the total sales for this affiliate for the time this subcontract covers.
-  uint256 public currentTotal;
+  uint public currentTotal;
   // The timestamp when currentTotal was last updated.
-  uint256 public totalLastUpdated;
+  uint public totalLastUpdated;
   // The timestamp where this subcontract starts counting sales (i.e., where the last subcontract left off).
-  uint256 public immutable startTime;
+  uint public immutable startTime;
 
   // Used to keep track of async requests to get information from the oracle.
-  mapping(uint256 => bool) private myRequests;
+  mapping(uint => bool) private myRequests;
 
-  event CurrentTotalUpdatedEvent(uint256 currentTotal, uint256 id);
+  event CurrentTotalUpdatedEvent(uint currentTotal, uint id);
 
   receive() external payable { }
   fallback() external payable { }
 
   constructor(
     address payable _affiliate,
-    uint256 subcontractDuration,
-    uint256 sellerGracePeriodDuration,
-    uint256 _startTime,
+    uint subcontractDuration,
+    uint sellerGracePeriodDuration,
+    uint _startTime,
     uint _indexNumber
   ) payable {
     owner = msg.sender;
@@ -73,17 +73,11 @@ contract AffiliateSubcontract {
 
   function updateCurrentTotal() public onlyAffiliate {
     require(affiliateResolved == false, "Affiliate already called resolve successfully on this subcontract.");
-    uint256 endTime;
-    if (block.timestamp < expiration) {
-      endTime = block.timestamp;
-    } else {
-      endTime = expiration;
-    }
-    uint256 id = AffiliateOracle(AffiliateContract(owner).oracle()).getAffiliateTotal(affiliate, startTime, endTime);
+    uint id = AffiliateOracle(AffiliateContract(owner).oracle()).getAffiliateTotal(affiliate, startTime, expiration);
     myRequests[id] = true;
   }
 
-  function callback(uint256 _currentTotal, uint256 _id) public {
+  function callback(uint _currentTotal, uint _id) public {
     require(msg.sender == AffiliateContract(owner).oracle(), "Only the oracle can call this method.");
     require(myRequests[_id], "This request is not in my pending list.");
     currentTotal = _currentTotal;

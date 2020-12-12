@@ -23,6 +23,8 @@ class NewContractForm extends React.Component {
       subcontractDuration: 7,
       //length of seller grace period after each SC period in minutes
       sellerGracePeriodDuration: 1,
+      // length of contract end grace period before main contract expires, in minutes
+      contractEndGracePeriodDuration: 1,
       //comission affiliateRate, %
       affiliateRate: 5,
       //Incentive fee amount in ether
@@ -60,16 +62,18 @@ class NewContractForm extends React.Component {
     try {
       const account = await this.getAccount()
       const txVal = String(Number(this.state.incentiveFee) + Number(this.state.subcontractStake))
-      // the subcontract duration and seller grace period duration need to be converted into seconds.
-      // currently they are both given in minutes
+      // the duration values need to be converted into seconds.
+      // currently they are given in minutes
       const subcontractDuration = Number(this.state.subcontractDuration) * 60
       const sellerGracePeriodDuration = Number(this.state.sellerGracePeriodDuration) * 60
+      const contractEndGracePeriodDuration = Number(this.state.contractEndGracePeriodDuration) * 60
       const newContract = await this.affiliateContract.new(
         this.state.affiliateAddress,
         this.state.oracleAddress,
         this.state.totalSubcontracts,
         subcontractDuration,
         sellerGracePeriodDuration,
+        contractEndGracePeriodDuration,
         this.web3.utils.toWei(this.state.subcontractStake),
         this.web3.utils.toWei(this.state.incentiveFee),
         this.state.affiliateRate,
@@ -178,6 +182,18 @@ class NewContractForm extends React.Component {
           defaultValue={this.state.subcontractDuration}
           onChange={this.handleInputChange}
           id="subcontractDuration"
+          min={0} 
+          step={1}
+        />
+      </FormGroup>
+      <FormGroup>
+        <Label for="contractEndGracePeriodDuration">Contract end grace period duration, in minutes</Label>
+        <Input
+          type="number"
+          name = "contractEndGracePeriodDuration"
+          defaultValue={this.state.contractEndGracePeriodDuration}
+          onChange={this.handleInputChange}
+          id="contractEndGracePeriodDuration"
           min={0} 
           step={1}
         />
