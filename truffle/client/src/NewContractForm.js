@@ -10,23 +10,18 @@ class NewContractForm extends React.Component {
     this.web3 = props.web3
     this.affiliateContract = contract({abi: AffiliateContractJSON.abi, bytecode: AffiliateContractJSON.bytecode})
     this.affiliateContract.setProvider(this.web3.currentProvider)
+    // Note: all monetary amounts are in Ether and all time amounts are in minutes.
     this.state = {
-      // Affilate wallet address
       affiliateAddress: '',
-      // Oracle address
       oracleAddress: '',
-      // funds staked per SC in ether
-      subcontractStake: 0,
-      //number of subcontracts (minimum:3)
+      subcontractStake: 1,
       totalSubcontracts: 3,
-      //length of each subcontract in minutes
-      subcontractDuration: 7,
-      //length of seller grace period after each SC period in minutes
+      subcontractDuration: 1,
       sellerGracePeriodDuration: 1,
-      //comission affiliateRate, %
-      affiliateRate: 5,
-      //Incentive fee amount in ether
-      incentiveFee: 3
+      contractEndGracePeriodDuration: 1,
+      // Integer percentage
+      affiliateRate: 10,
+      incentiveFee: 1
     }
     this.handleInputChange = this.handleInputChange.bind(this)
     this.handleCreateNewContract = this.handleCreateNewContract.bind(this)
@@ -56,24 +51,41 @@ class NewContractForm extends React.Component {
     }
   }
 
+  getByteString(rawRate) {
+    // Converting the affiliate commission percentage to the necessary bit string.
+    let h = 100
+    let t = h*1000000
+    let r = rawRate*1000000
+    let rate = ''
+    for (var i = 0; i < 32; i++) {
+      if (t > r) {
+        rate += '03'
+      } else if (t <= r) {
+        rate += '13'
+        r -= t
+      }
+      t /= 2
+    }
+    rate += "x0"
+    var rrate = rate.split("").reverse().join("")
+    return rrate
+  }
+
   async handleCreateNewContract(event) {
     try {
       const account = await this.getAccount()
-      const txVal = String(Number(this.state.incentiveFee) + Number(this.state.subcontractStake))
-      // the subcontract duration and seller grace period duration need to be converted into seconds.
-      // currently they are both given in minutes
-      const subcontractDuration = Number(this.state.subcontractDuration) * 60
-      const sellerGracePeriodDuration = Number(this.state.sellerGracePeriodDuration) * 60
+      // The duration values need to be converted into seconds, currently they are given in minutes.
       const newContract = await this.affiliateContract.new(
         this.state.affiliateAddress,
         this.state.oracleAddress,
         this.state.totalSubcontracts,
-        subcontractDuration,
-        sellerGracePeriodDuration,
-        this.web3.utils.toWei(this.state.subcontractStake),
-        this.web3.utils.toWei(this.state.incentiveFee),
-        this.state.affiliateRate,
-        {from: account, value: this.web3.utils.toWei(txVal)}
+        Number(this.state.subcontractDuration) * 60,
+        Number(this.state.sellerGracePeriodDuration) * 60,
+        Number(this.state.contractEndGracePeriodDuration) * 60,
+        this.web3.utils.toWei(String(this.state.subcontractStake)),
+        this.web3.utils.toWei(String(this.state.incentiveFee)),
+        this.getByteString(Number(this.state.affiliateRate)),
+        {from: account, value: this.web3.utils.toWei(String(Number(this.state.incentiveFee) + Number(this.state.subcontractStake)))}
       )
       console.log("address: " + newContract.address)
       const subcontract = await newContract.getCurrentSubcontract.call()
@@ -178,6 +190,18 @@ class NewContractForm extends React.Component {
           defaultValue={this.state.subcontractDuration}
           onChange={this.handleInputChange}
           id="subcontractDuration"
+          min={0} 
+          step={1}
+        />
+      </FormGroup>
+      <FormGroup>
+        <Label for="contractEndGracePeriodDuration">Contract end grace period duration, in minutes</Label>
+        <Input
+          type="number"
+          name = "contractEndGracePeriodDuration"
+          defaultValue={this.state.contractEndGracePeriodDuration}
+          onChange={this.handleInputChange}
+          id="contractEndGracePeriodDuration"
           min={0} 
           step={1}
         />

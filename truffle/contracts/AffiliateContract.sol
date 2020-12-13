@@ -6,59 +6,54 @@ import * as SC from "./AffiliateSubcontract.sol";
 contract AffiliateContract {
   // The minimum number of subcontracts is 3.
   uint constant MIN_TOTAL_SUBCONTRACTS = 3;
-  // The amount of time that's added on to the contract expiration time so that the affiliate has extra time to clear out all subcontracts.
-  // PLACEHOLDER - NEED TO FIX
-  uint256 constant CONTRACT_END_GRACE_PERIOD = 300;
-
+  
   // The business that wants to pay affiliates. Set to the address that calls the contract's constructor.
   address payable public immutable owner;
   // The affiliate's personal address that funds will be sent to.
   address payable public immutable affiliate;
+  // The address of the oracle contract.
+  address public oracle;
 
   // The total number of subcontracts that can be created from this one.
   uint public immutable totalSubcontracts;
   // The number of the latest created subcontract.
   uint public subcontractsSoFar = 0;
-  // Array containing the subcontracts
-  // Storage array (by default)
+  // Array containing the subcontract addresses.
   address payable[] public subcontracts;
 
-  // When the main contract will expire
-  uint256 public immutable contractExpiration;
-  // The length of time each subcontract will be valid for
-  uint256 public immutable subcontractDuration;
-  // The seller's grace period for issuing a new subcontract
-  uint256 public immutable gracePeriodDuration;
+  // When the main contract will expire.
+  uint public immutable contractExpiration;
+  // The length of time each subcontract will be valid for.
+  uint public immutable subcontractDuration;
+  // The seller's grace period for issuing a new subcontract.
+  uint public immutable gracePeriodDuration;
 
   // The amount that will be staked for the affiliate to earn in each subcontract.
   uint public immutable subcontractStake;
   // The amount of the incentive fee staked by the seller to incentivize them to hold up their end of the deal.
   uint public immutable incentiveFee;
-  // An integer representing the percentage of sales that the affiliate will receive. 
-  uint public immutable affiliatePercentage;
-
-  // The address of the oracle contract.
-  address public oracle;
+  // A byte array representing the percentage of sales that the affiliate will receive. 
+  bytes32 public affiliatePercentage;
 
   // The constructor should be called with the amount of the incentive fee plus the first contract stake.
   constructor(
     address payable _affiliate,
     address _oracle,
     uint _totalSubcontracts,
-    uint256 _subcontractDuration,
-    uint256 _gracePeriodDuration,
+    uint _subcontractDuration,
+    uint _gracePeriodDuration,
+    uint _contractEndGracePeriodDuration,
     uint _subcontractStake,
     uint _incentiveFee,
-    uint _affiliatePercentage
+    bytes32 _affiliatePercentage
   ) payable {
-    require(msg.value == (_incentiveFee + _subcontractStake), "amount sent to constructor must equal incentive fee plus one subcontract stake");
-    require(_totalSubcontracts >= MIN_TOTAL_SUBCONTRACTS, "total subcontracts must be at least 3");
+    require(msg.value == (_incentiveFee + _subcontractStake), "Amount sent to constructor must equal incentive fee plus one subcontract stake");
+    require(_totalSubcontracts >= MIN_TOTAL_SUBCONTRACTS, "Total subcontracts must be at least 3");
     owner = msg.sender;
     affiliate = _affiliate;
     oracle = _oracle;
     totalSubcontracts = _totalSubcontracts;
-    // PLACEHOLDER - check this???
-    contractExpiration = block.timestamp + (_totalSubcontracts*_subcontractDuration) + CONTRACT_END_GRACE_PERIOD;
+    contractExpiration = block.timestamp + (_totalSubcontracts*_subcontractDuration) + _contractEndGracePeriodDuration;
     subcontractDuration = _subcontractDuration;
     gracePeriodDuration = _gracePeriodDuration;
     subcontractStake = _subcontractStake;
@@ -96,7 +91,18 @@ contract AffiliateContract {
     }
   }
 
-  // called by the owner
+  function getAffiliateEarnings(uint rawTotal) public view returns(uint) {
+    uint earnings = 0;
+    byte one = "1";
+    for (uint i = 32; i >= 1; i--) {
+      if (affiliatePercentage[i - 1] == one) {
+        earnings += rawTotal;
+      }
+      rawTotal = rawTotal >> 1;
+    }
+    return earnings;
+  }
+
   function createNextSubContract() public payable onlyOwner contractNotExpired {
     require(subcontractsSoFar < totalSubcontracts, "Total number of subcontracts exceeded.");
     require(msg.value == subcontractStake, "Incorrect stake amount.");
