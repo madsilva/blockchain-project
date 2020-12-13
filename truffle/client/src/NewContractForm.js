@@ -51,34 +51,29 @@ class NewContractForm extends React.Component {
     }
   }
 
+  getByteString(rawRate) {
+    // Converting the affiliate commission percentage to the necessary bit string.
+    let h = 100
+    let t = h*1000000
+    let r = rawRate*1000000
+    let rate = ''
+    for (var i = 0; i < 32; i++) {
+      if (t > r) {
+        rate += '03'
+      } else if (t <= r) {
+        rate += '13'
+        r -= t
+      }
+      t /= 2
+    }
+    rate += "x0"
+    var rrate = rate.split("").reverse().join("")
+    return rrate
+  }
+
   async handleCreateNewContract(event) {
     try {
       const account = await this.getAccount()
-      
-      // Converting the affiliate commission percentage to the necessary bit string.
-      let ratep = Number(this.state.affiliateRate) 
-      let h=100
-      let t=h*1000000
-      let r=ratep*1000000
-      let rate=''
-      for(var i=0; i<32; i++){
-        if(t>r){
-          rate+='0';
-        } else if(t<=r){
-          rate+='1';
-          r-=t;
-        }
-        t/=2
-      }
-      var rrate=rate.split("").reverse().join("");//reverse 
-      console.log('rrate:'+rrate)
-      var b=parseInt(rrate,2);
-      console.log('b:'+b)
-      var final='0x'+b.toString(16)
-      console.log('final:'+final)
-
-      const tx = String(Number(this.state.incentiveFee) + Number(this.state.subcontractStake))
-
       // The duration values need to be converted into seconds, currently they are given in minutes.
       const newContract = await this.affiliateContract.new(
         this.state.affiliateAddress,
@@ -89,8 +84,8 @@ class NewContractForm extends React.Component {
         Number(this.state.contractEndGracePeriodDuration) * 60,
         this.web3.utils.toWei(String(this.state.subcontractStake)),
         this.web3.utils.toWei(String(this.state.incentiveFee)),
-        final,
-        {from: account, value: this.web3.utils.toWei(tx)}
+        this.getByteString(Number(this.state.affiliateRate)),
+        {from: account, value: this.web3.utils.toWei(String(Number(this.state.incentiveFee) + Number(this.state.subcontractStake)))}
       )
       console.log("address: " + newContract.address)
       const subcontract = await newContract.getCurrentSubcontract.call()

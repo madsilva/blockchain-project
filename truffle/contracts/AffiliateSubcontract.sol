@@ -16,8 +16,7 @@ contract AffiliateSubcontract {
   uint public immutable sellerGracePeriodEnd;
 
   // What index this subcontract has in the array in the main contract.
-  //TEMPPPPPPPPP
-  uint public indexNumber;
+  uint public immutable indexNumber;
   // The address of the next subcontract when it gets created.
   address public nextSubcontract = address(0x0);
 
@@ -32,6 +31,8 @@ contract AffiliateSubcontract {
   uint public totalLastUpdated;
   // The timestamp where this subcontract starts counting sales (i.e., where the last subcontract left off).
   uint public immutable startTime;
+  // The amount paid out to the affiliate when the subcontract is resolved (mostly for debugging).
+  uint public payout = 0;
 
   // Used to keep track of async requests to get information from the oracle.
   mapping(uint => bool) private myRequests;
@@ -96,10 +97,12 @@ contract AffiliateSubcontract {
     // If this is the final subcontract or if the seller has already made the next subcontract, we can cash out now.
     if ((indexNumber + 1) == totalSubcontracts || nextSubcontract != address(0x0)) {
       require(totalLastUpdated >= expiration, "Current total is not up to date, affiliate must call updateCurrentTotal().");
-      // PLACEHOLDER
-      uint earnings = mainContract.getAffiliateEarnings(currentTotal);
-      indexNumber = earnings;
-      affiliate.transfer(0);
+      payout = mainContract.getAffiliateEarnings(currentTotal);
+      if (payout <= address(this).balance) {
+        affiliate.transfer(payout);
+      } else {
+        affiliate.transfer(address(this).balance);
+      }
       affiliateResolved = true;
     } else {
       // Else case - either the grace period isn't over and we're still waiting on the seller, or the seller has allowed it to pass without making the next subcontract.

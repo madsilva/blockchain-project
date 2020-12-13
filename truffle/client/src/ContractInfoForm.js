@@ -108,6 +108,7 @@ class ContractInfoForm extends React.Component {
       const currentTotal = await subcontract.currentTotal.call()
       const totalLastUpdated = await subcontract.totalLastUpdated.call()
       const startTime = await subcontract.startTime.call()
+      const payout = await subcontract.payout.call()
       console.log("mainContractAddress: " + mainContractAddress)
       console.log("subcontractExpiration: " + new Date(subcontractExpiration * 1000).toLocaleString("en-US"))
       console.log("sellerGracePeriodEnd: " + new Date(sellerGracePeriodEnd * 1000).toLocaleString("en-US"))
@@ -118,6 +119,7 @@ class ContractInfoForm extends React.Component {
       console.log("currentTotal: " + currentTotal)
       console.log("totalLastUpdated: " + new Date(totalLastUpdated * 1000).toLocaleString("en-US"))
       console.log("startTime: " + new Date(startTime * 1000).toLocaleString("en-US"))
+      console.log("payout: " + payout)
     } catch(err) {
       console.log(err)
     }

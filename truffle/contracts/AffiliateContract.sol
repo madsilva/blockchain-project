@@ -91,12 +91,11 @@ contract AffiliateContract {
     }
   }
 
-  function getAffiliateEarnings(uint _rawTotal) public view returns(uint) {
-    uint rawTotal = _rawTotal;
+  function getAffiliateEarnings(uint rawTotal) public view returns(uint) {
     uint earnings = 0;
+    byte one = "1";
     for (uint i = 32; i >= 1; i--) {
-      byte bit = "1";
-      if (affiliatePercentage[i - 1] == bit) {
+      if (affiliatePercentage[i - 1] == one) {
         earnings += rawTotal;
       }
       rawTotal = rawTotal >> 1;
