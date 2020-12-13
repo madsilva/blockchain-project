@@ -107,8 +107,8 @@ async function retrieveAffiliateTotal(affiliate, startTime, endTime) {
       console.log(endTime)
       console.log((Date.parse(value.timestamp)/1000 < endTime))
    }*/
-    if ( (value.affiliate_code === affcode) && (Date.parse(value.timestamp)/1000 >= startTime) && (Date.parse(value.timestamp)/1000 < endTime) ) {
-       total+=(parseInt(value.total)); 
+    if ( (value.affiliate_code === affiliate) && (Date.parse(value.timestamp)/1000 >= startTime) && (Date.parse(value.timestamp)/1000 < endTime) ) {
+       total+=(parseInt(value.total));
        console.log("true")
     }
     return value; }) 

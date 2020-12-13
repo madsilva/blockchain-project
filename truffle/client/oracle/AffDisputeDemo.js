@@ -86,16 +86,13 @@ async function updateCurrentTotal(scIndex,caller){
 }
 
 async function checkEarnings(scIndex,caller){
-  console.log(caller+" Called checked earnings on SC"+scIndex)
+  console.log(caller+" checked earnings on SC"+scIndex)
   await contracts[""+scIndex].currentTotal.call() 
 }
 
 async function createNextSubContract(sliceIndex,caller){
   console.log(caller+" Called createNextSubContract on main contract to create SC"+sliceIndex)
-  var tx=await contracts["main"].createNextSubContract({from: addresses[caller],gas: 2000000,value: web3js.utils.toWei(''+sliceMPE)})
-  //var txvalue= (await web3js.eth.getTransaction(tx['tx']))['value']
-  //console.log(txvalue)
-
+  await contracts["main"].createNextSubContract({from: addresses[caller],gas: 2000000,value: web3js.utils.toWei(''+sliceMPE)})
 }
 
 async function getCurrentSubcontract(sliceIndex,caller){
@@ -109,21 +106,22 @@ async function getCurrentSubcontract(sliceIndex,caller){
 
 async function affiliateResolve(scIndex,caller){
   console.log(caller+" Called affiliateResolve SC"+scIndex)
-  var tx = await contracts[''+scIndex].affiliateResolve({from: addresses[caller],gas: 2000000})
-  var txvalue= (await web3js.eth.getTransaction(tx['tx']))//['value']
-  console.log(tx)
-  console.log(txvalue)
+  await contracts[''+scIndex].affiliateResolve({from: addresses[caller],gas: 2000000})
 }
 
 async function sellerResolve(caller){
   console.log(caller+" Called sellerResolve SC")
   await contracts['main'].sellerResolve({from: addresses[caller],gas: 2000000})
-
 }
 
+async function getNextSubcontract(scIndex,caller){
+  console.log(caller+" Called sellerResolve SC")
+  addr=await contracts[''+scIndex].nextSubcontract.call() 
+  if(!Number(addr)){
+    console.log("Address is null")
+  }
 
-
-
+}
 
 
 let index = 0;
@@ -134,7 +132,7 @@ async function nextSlice() {
   console.log("TIME: Slice " + index + " ended");
   if(index+1<nSubcontracts){
     console.log("TIME: Slice " + (index+1) + " started");
-    if(index!=nSubcontracts-1) console.log("TIME: SC" + (index+1) + " SGP started");
+    if(index!=nSubcontracts-1) console.log("TIME: SC" + (index+1) + " Seller Grace Period started");
   }
   else {
     console.log("TIME: Affiliate Grace Period started");
@@ -145,7 +143,7 @@ async function nextSlice() {
     sliceActions('AGP')
   }
 
-  setTimeout(function() { console.log("TIME: SC" + (index) + " SGP ended"); }, SGPlength*1000);
+  setTimeout(function() { console.log("TIME: SC" + (index) + " Seller Grace Period ended"); }, SGPlength*1000);
   index += 1;
   sliceActions(index)
   
@@ -154,10 +152,6 @@ async function nextSlice() {
     }
 }
 
-
-
-const now = new Date()  
-const nowEpoch = (Math.floor(now.getTime()/1000)) 
 
 
 async function sliceActions(slice) {
@@ -174,7 +168,7 @@ async function sliceActions(slice) {
       setTimeout(function() {checkEarnings(0,"Affiliate")  }, (2*sliceLength/12)*1000);
       setTimeout(function() {createNextSubContract(1,"Seller")  }, (2.5*sliceLength/12)*1000);
       setTimeout(function() {getCurrentSubcontract(1,"Seller")  }, (4*sliceLength/12)*1000);
-      setTimeout(function() {getCurrentSubcontract(1,"Affiliate")  }, (4.1*sliceLength/12)*1000);
+      setTimeout(function() {getCurrentSubcontract(1,"Affiliate")  }, (4.3*sliceLength/12)*1000);
       setTimeout(function() {affiliateResolve(0,"Affiliate")  }, (5*sliceLength/12)*1000);
       setTimeout(function() {updateCurrentTotal(1,"Affiliate")  }, (6*sliceLength/12)*1000);
       setTimeout(function() {checkEarnings(1,"Affiliate")  }, (6.2*sliceLength/12)*1000);
@@ -185,31 +179,25 @@ async function sliceActions(slice) {
       setTimeout(function() {checkEarnings(1,"Affiliate")  }, (2*sliceLength/12)*1000);
       setTimeout(function() {createNextSubContract(2,"Seller")  }, (2.5*sliceLength/12)*1000);
       setTimeout(function() {getCurrentSubcontract(2,"Seller")  }, (4*sliceLength/12)*1000);
-      setTimeout(function() {getCurrentSubcontract(2,"Affiliate")  }, (4.1*sliceLength/12)*1000);
-      setTimeout(function() {affiliateResolve(1,"Affiliate")  }, (5*sliceLength/12)*1000);
-      setTimeout(function() {updateCurrentTotal(2,"Affiliate")  }, (6*sliceLength/12)*1000);
-      setTimeout(function() {checkEarnings(2,"Affiliate")  }, (6.2*sliceLength/12)*1000);
+      setTimeout(function() {getCurrentSubcontract(2,"Affiliate")  }, (4.3*sliceLength/12)*1000);
+      setTimeout(function() {affiliateResolve(1,"Affiliate")  }, (6*sliceLength/12)*1000);
+      setTimeout(function() {updateCurrentTotal(2,"Affiliate")  }, (7*sliceLength/12)*1000);
+      setTimeout(function() {checkEarnings(2,"Affiliate")  }, (7.2*sliceLength/12)*1000);
       break;
 
     case 3:
       setTimeout(function() {updateCurrentTotal(2,"Affiliate")  }, (1*sliceLength/12)*1000);
       setTimeout(function() {checkEarnings(2,"Affiliate")  }, (2*sliceLength/12)*1000);
-      setTimeout(function() {createNextSubContract(3,"Seller")  }, (2.5*sliceLength/12)*1000);
-      setTimeout(function() {getCurrentSubcontract(3,"Seller")  }, (4*sliceLength/12)*1000);
-      setTimeout(function() {getCurrentSubcontract(3,"Affiliate")  }, (4.1*sliceLength/12)*1000);
-      setTimeout(function() {affiliateResolve(2,"Affiliate")  }, (5*sliceLength/12)*1000);
-      setTimeout(function() {updateCurrentTotal(3,"Affiliate")  }, (6*sliceLength/12)*1000);
-      setTimeout(function() {checkEarnings(3,"Affiliate")  }, (6.1*sliceLength/12)*1000);
+      //setTimeout(function() {createNextSubContract(3,"Seller")  }, (2.5*sliceLength/12)*1000);
+      //setTimeout(function() {getCurrentSubcontract(3,"Seller")  }, (4*sliceLength/12)*1000);
+      setTimeout(function() {getNextSubcontract(2,"Affiliate")  }, (7*sliceLength/12)*1000);
+      setTimeout(function() {affiliateResolve(2,"Affiliate")  }, (8*sliceLength/12)*1000);
       break;
 
     case 'AGP':
-      setTimeout(function() {updateCurrentTotal(3,"Affiliate")  }, (3*sliceLength/12)*1000);
-      setTimeout(function() {checkEarnings(3,"Affiliate")  }, (4*sliceLength/12)*1000);
-      setTimeout(function() {affiliateResolve(3,"Affiliate")  }, (6*sliceLength/12)*1000);
       break;
 
     case 'end':
-      setTimeout(function() {sellerResolve("Seller")  }, (1*sliceLength/12)*1000);
       break;
   }
 }
@@ -224,8 +212,7 @@ async function sliceActions(slice) {
   addresses["Seller"]=ownerAddr
   contracts['main']=mainContract
   contracts['0']=sc0
-  
-
+  console.log("addresses: "+JSON.stringify(addresses))
   await mainContract.setOracleAddress(oracleAddr, {from: ownerAddr})
   startTime = await sc0.startTime.call()
   var now = new Date()
