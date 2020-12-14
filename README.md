@@ -9,21 +9,26 @@
 - Python 3
 
 ## Instructions
+### Setting up the simulated blockchain
 1. Run Ganache GUI and create a new workspace with the following:
-  - Under Truffle Projects, use the Add Project button to select the file `~/truffle/truffle-config.js` from the project directory.
-  - Under Server set the port number to 8545.
-2. Making sure the Ganache workspace is running, cd into `~/truffle/client` directory and run:
-  - `npm install`
-  - `npm run deploy:all`
+    - Under Truffle Projects, use the Add Project button to select the file `~/truffle/truffle-config.js` from the project directory.
+    - Under Server set the port number to 8545.
 
-6. In a separate terminal tab, cd into `~/truffle/client/oracle/test_json` and run `python3 main.py`
+### Running the project
+1. Make sure that the Ganache workspace is running.
+2. cd into `~/truffle/client` directory and run:
+    - `npm install`
+    - `npm run deploy:all`
 3. In a separate terminal tab, cd into `~/truffle/client/oracle/test_json` and run `python3 -m http.server` (or equivalent for your Python install).
-  - This is so that the generated transaction JSON can be served to the AffiliateOracle.js script. 
+    - This is so that the generated transaction JSON can be served to the AffiliateOracle.js script. 
 4. In a separate teminal tab, cd into `~/truffle/client/oracle` and run `node AffiliateOracle.js`
-  - This script handles requests for an affiliate's transaction information from the oracle contract.
-5. In a separate terminal tab, cd into `~/truffle/client` and run `npm run start`. The project test website will be available at `http://localhost:3000/`.
+    - This script handles requests for an affiliate's transaction information from the oracle contract.
+5. In a separate terminal tab, cd into `~/truffle/client/oracle/test_json` and run `python3 main.py` (or equivalent for your Python install).
+    - This script continuously generates dummy transaction data. 
+6. In a separate terminal tab, cd into `~/truffle/client` and run `npm run start`. The project test website will be available at `http://localhost:3000/`.
 
-
+### Using the project
+In order to generate test transaction data, you must add the wallet address of each affiliate to the file `~/truffle/client/oracle/test_json/affcodes.txt` (separated by newlines).
 
 
 ## How to run (OLD)
