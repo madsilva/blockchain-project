@@ -85,3 +85,5 @@ def demo(sellerKey,affFilename="affcodes.txt",cycle=900):
             affFile = open(affFilename, "r")
             affCodes = [(line.strip()).split() for line in affFile]
             affFile.close()
+
+demo("test")

@@ -16,12 +16,14 @@
   - `npm install`
   - `npm run deploy:all`
 
-
+6. In a separate terminal tab, cd into `~/truffle/client/oracle/test_json` and run `python3 main.py`
 3. In a separate terminal tab, cd into `~/truffle/client/oracle/test_json` and run `python3 -m http.server` (or equivalent for your Python install).
   - This is so that the generated transaction JSON can be served to the AffiliateOracle.js script. 
 4. In a separate teminal tab, cd into `~/truffle/client/oracle` and run `node AffiliateOracle.js`
   - This script handles requests for an affiliate's transaction information from the oracle contract.
 5. In a separate terminal tab, cd into `~/truffle/client` and run `npm run start`. The project test website will be available at `http://localhost:3000/`.
+
+
 
 
 ## How to run (OLD)

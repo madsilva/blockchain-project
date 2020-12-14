@@ -3,6 +3,7 @@ import {Form, FormGroup, Input, Button, Label} from 'reactstrap'
 
 var contract = require("@truffle/contract")
 const AffiliateContractJSON = require('./contracts/AffiliateContract.json')
+const AffiliateOracleJSON = require('./contracts/AffiliateOracle.json') 
 
 class NewContractForm extends React.Component {
   constructor(props) {
@@ -10,6 +11,8 @@ class NewContractForm extends React.Component {
     this.web3 = props.web3
     this.affiliateContract = contract({abi: AffiliateContractJSON.abi, bytecode: AffiliateContractJSON.bytecode})
     this.affiliateContract.setProvider(this.web3.currentProvider)
+    this.affiliateOracle = contract({abi: AffiliateOracleJSON.abi, bytecode: AffiliateOracleJSON.bytecode})
+    this.affiliateOracle.setProvider(this.web3.currentProvider)
     // Note: all monetary amounts are in Ether and all time amounts are in minutes.
     this.state = {
       affiliateAddress: '',
@@ -25,6 +28,7 @@ class NewContractForm extends React.Component {
     }
     this.handleInputChange = this.handleInputChange.bind(this)
     this.handleCreateNewContract = this.handleCreateNewContract.bind(this)
+    this.handleGetOracleAddress = this.handleGetOracleAddress.bind(this)
   }
 
   handleInputChange(event) {
@@ -95,11 +99,20 @@ class NewContractForm extends React.Component {
     }
   }
 
+  async handleGetOracleAddress(event) {
+    const networkId = await this.web3.eth.net.getId()
+    this.affiliateOracle.setNetwork(networkId)
+    const address = AffiliateOracleJSON.networks[networkId].address
+    const oracle = await this.affiliateOracle.at(address)
+    console.log("oracle address: " + address)
+  }
+
   render() {
     return(<React.Fragment>
     <Form id="inputForm">
       <h2>Create a new affiliate contract</h2>
       <h3>The current account in Metamask will be the owner of this contract.</h3>
+      <Button color="primary" form='inputForm' onClick={ this.handleGetOracleAddress }>Get default oracle address</Button>
       <FormGroup>
         <Label for="affiliateAddress">Affiliate's Ethereum Wallet Address</Label>
         <Input
