@@ -34,6 +34,8 @@ contract AffiliateContract {
   uint public immutable incentiveFee;
   // A byte array representing the percentage of sales that the affiliate will receive. 
   bytes32 public affiliatePercentage;
+  // Human readable version of affiliate percentage.
+  uint public immutable humanReadableAffiliatePercentage;
 
   // The constructor should be called with the amount of the incentive fee plus the first contract stake.
   constructor(
@@ -45,7 +47,8 @@ contract AffiliateContract {
     uint _contractEndGracePeriodDuration,
     uint _subcontractStake,
     uint _incentiveFee,
-    bytes32 _affiliatePercentage
+    bytes32 _affiliatePercentage,
+    uint _humanReadableAffiliatePercentage
   ) payable {
     require(msg.value == (_incentiveFee + _subcontractStake), "Amount sent to constructor must equal incentive fee plus one subcontract stake");
     require(_totalSubcontracts >= MIN_TOTAL_SUBCONTRACTS, "Total subcontracts must be at least 3");
@@ -59,6 +62,7 @@ contract AffiliateContract {
     subcontractStake = _subcontractStake;
     incentiveFee = _incentiveFee;
     affiliatePercentage = _affiliatePercentage;
+    humanReadableAffiliatePercentage = _humanReadableAffiliatePercentage;
 
     // Creating the first subcontract.
     // REMEMBER THAT SUBCONTRACTSSOFAR MUST HAVE 1 SUBTRACTED BEFORE USING FOR INDEXING

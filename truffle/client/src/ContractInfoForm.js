@@ -27,8 +27,20 @@ class ContractInfoForm extends React.Component {
       incentiveFee: '',
       affiliatePercentage: '',
       oracle: '',
+      subcontractIndex: 0,
+      subcontractAtIndex: '',
       subcontractAddress: '',
-      subcontractIndex: 0
+      subcontractMainContractAddress: '',
+      subcontractExpiration: '',
+      sellerGracePeriodEnd: '',
+      indexNumber: '',
+      nextSubcontractAddress: '',
+      affiliateResolved: '',
+      gracePeriodExpired: '',
+      currentTotal: '',
+      totalLastUpdated: '',
+      startTime: '',
+      payout: ''
     }
     this.handleInputChange = this.handleInputChange.bind(this)
     this.handleMainContractInfo = this.handleMainContractInfo.bind(this)
@@ -64,10 +76,12 @@ class ContractInfoForm extends React.Component {
         subcontractStake: String(this.web3.utils.fromWei(subcontractStake)),
         currentSubcontract: String(currentSubcontract)
       })
-      console.log("subcontractsSoFar: " + subcontractsSoFar)
-      console.log("mainContractExpiration: " + new Date(mainContractExpiration * 1000).toLocaleString("en-US"))
-      console.log("subcontractStake: " + this.web3.utils.fromWei(subcontractStake))
-      console.log("currentSubcontract: " + currentSubcontract)
+      /*
+      console.log("subcontractsSoFar: " + this.state.subcontractsSoFar)
+      console.log("mainContractExpiration: " + this.state.mainContractExpiration)
+      console.log("subcontractStake: " + this.state.subcontractStake)
+      console.log("currentSubcontract: " + this.state.currentSubcontract)
+      */
     } catch(err) {
       console.log(err)
     }
@@ -82,7 +96,7 @@ class ContractInfoForm extends React.Component {
       const subcontractDuration = await mainContract.subcontractDuration.call()
       const gracePeriodDuration = await mainContract.gracePeriodDuration.call()
       const incentiveFee = await mainContract.incentiveFee.call()
-      const affiliatePercentage = await mainContract.affiliatePercentage.call()
+      const affiliatePercentage = await mainContract.humanReadableAffiliatePercentage.call()
       const oracle = await mainContract.oracle.call()
       this.setState({
         owner: String(owner),
@@ -94,14 +108,16 @@ class ContractInfoForm extends React.Component {
         affiliatePercentage: String(affiliatePercentage),
         oracle: String(oracle)
       })
-      console.log("owner: " + owner)
-      console.log("affiliate: " + affiliate)
-      console.log("totalSubcontracts: " + totalSubcontracts)
-      console.log("subcontractDuration: " + subcontractDuration)
-      console.log("gracePeriodDuration: " + gracePeriodDuration)
-      console.log("incentiveFee: " + this.web3.utils.fromWei(incentiveFee))
-      console.log("affiliatePercentage: " + affiliatePercentage + "%")
-      console.log("oracle: " + oracle)
+      /*
+      console.log("owner: " + this.state.owner)
+      console.log("affiliate: " + this.state.affiliate)
+      console.log("totalSubcontracts: " + this.state.totalSubcontracts)
+      console.log("subcontractDuration: " + subcontractDuration + " sec")
+      console.log("gracePeriodDuration: " + gracePeriodDuration + " sec")
+      console.log("incentiveFee: " + this.state.incentiveFee)
+      console.log("affiliatePercentage: " + this.state.affiliatePercentage + "%")
+      console.log("oracle: " + this.state.oracle)
+      */
     } catch(err) {
       console.log(err)
     } 
@@ -115,7 +131,8 @@ class ContractInfoForm extends React.Component {
         console.log("Error: index out of range of existing subcontracts.")
       } else {
         const result = await mainContract.subcontracts.call(this.state.subcontractIndex)
-        console.log("Subcontract at given index: " + result)
+        this.setState({subcontractAtIndex: String(result)})
+        //console.log("Subcontract at given index: " + this.state.subcontractAtIndex)
       }
     } catch(err) {
       this.printErrorMessage(err)
@@ -136,17 +153,32 @@ class ContractInfoForm extends React.Component {
       const totalLastUpdated = await subcontract.totalLastUpdated.call()
       const startTime = await subcontract.startTime.call()
       const payout = await subcontract.payout.call()
-      console.log("mainContractAddress: " + mainContractAddress)
-      console.log("subcontractExpiration: " + new Date(subcontractExpiration * 1000).toLocaleString("en-US"))
-      console.log("sellerGracePeriodEnd: " + new Date(sellerGracePeriodEnd * 1000).toLocaleString("en-US"))
-      console.log("indexNumber: " + indexNumber)
-      console.log("nextSubcontractAddress: " + nextSubcontractAddress)
-      console.log("affiliateResolved: " + affiliateResolved)
-      console.log("gracePeriodExpired: " + gracePeriodExpired)
-      console.log("currentTotal: " + currentTotal)
-      console.log("totalLastUpdated: " + new Date(totalLastUpdated * 1000).toLocaleString("en-US"))
-      console.log("startTime: " + new Date(startTime * 1000).toLocaleString("en-US"))
-      console.log("payout: " + payout)
+      this.setState({
+        subcontractMainContractAddress: String(mainContractAddress),
+        subcontractExpiration: new Date(subcontractExpiration * 1000).toLocaleString("en-US"),
+        sellerGracePeriodEnd: new Date(sellerGracePeriodEnd * 1000).toLocaleString("en-US"),
+        indexNumber: String(indexNumber),
+        nextSubcontractAddress: String(nextSubcontractAddress),
+        affiliateResolved: String(affiliateResolved),
+        gracePeriodExpired: String(gracePeriodExpired),
+        currentTotal: String(currentTotal),
+        totalLastUpdated: new Date(totalLastUpdated * 1000).toLocaleString("en-US"),
+        startTime: new Date(startTime * 1000).toLocaleString("en-US"),
+        payout: String(payout)
+      })
+      /*
+      console.log("mainContractAddress: " + this.state.mainContractAddress)
+      console.log("subcontractExpiration: " + this.state.subcontractExpiration)
+      console.log("sellerGracePeriodEnd: " + this.state.sellerGracePeriodEnd)
+      console.log("indexNumber: " + this.state.indexNumber)
+      console.log("nextSubcontractAddress: " + this.state.nextSubcontractAddress)
+      console.log("affiliateResolved: " + this.state.affiliateResolved)
+      console.log("gracePeriodExpired: " + this.state.gracePeriodExpired)
+      console.log("currentTotal: " + this.state.currentTotal)
+      console.log("totalLastUpdated: " + this.state.totalLastUpdated)
+      console.log("startTime: " + this.state.startTime)
+      console.log("payout: " + this.state.payout)
+      */
     } catch(err) {
       console.log(err)
     }
@@ -205,6 +237,13 @@ class ContractInfoForm extends React.Component {
             id="subcontractIndex"
           />
           <Button color="primary" form='inputForm' onClick={ this.handleSubcontractIndex }>Get subcontract address</Button>
+          <Table bordered size="sm">
+            <tbody>
+              <tr>
+                <td>Subcontract at index { this.state.subcontractIndex }: { this.state.subcontractAtIndex }</td>
+              </tr>
+            </tbody>
+          </Table>
         </FormGroup>
         <FormGroup>
           <Label for="subcontractAddress">Subcontract address</Label>
@@ -216,6 +255,27 @@ class ContractInfoForm extends React.Component {
             id="subcontractAddress"
           />
           <Button color="primary" form='inputForm' onClick={ this.handleSubcontractInfo }>Get subcontract info</Button>
+          <Table bordered size="sm">
+            <tbody>
+              <tr>
+                <td>Main contract address: { this.state.subcontractMainContractAddress }</td>
+                <td>Subcontract expiration: { this.state.subcontractExpiration }</td>
+                <td>Seller grace period end: { this.state.sellerGracePeriodEnd }</td>
+                <td>Index number: { this.state.indexNumber }</td>
+              </tr>
+              <tr>
+                <td>Next subcontract: { this.state.nextSubcontractAddress }</td>
+                <td>Affiliate resolved: { this.state.affiliateResolved }</td>
+                <td>Grace period expired: { this.state.gracePeriodExpired }</td>
+                <td>Current total: { this.state.currentTotal }</td>
+              </tr>
+              <tr>
+                <td>Total last updated: { this.state.totalLastUpdated }</td>
+                <td>Start time: { this.state.startTime }</td>
+                <td>Payout: { this.state.payout }</td>
+              </tr>
+            </tbody>
+          </Table>
         </FormGroup> 
       </Form>
     </React.Fragment>)

@@ -88,6 +88,7 @@ class NewContractForm extends React.Component {
         this.web3.utils.toWei(String(this.state.subcontractStake)),
         this.web3.utils.toWei(String(this.state.incentiveFee)),
         this.getByteString(Number(this.state.affiliateRate)),
+        this.state.affiliateRate,
         {from: account, value: this.web3.utils.toWei(String(Number(this.state.incentiveFee) + Number(this.state.subcontractStake)))}
       )
       console.log("address: " + newContract.address)
