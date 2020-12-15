@@ -33,8 +33,7 @@ class NewContractForm extends React.Component {
 
   handleInputChange(event) {
     const {name, value} = event.target
-    this.state[name] = value
-    this.setState(this.state)
+    this.setState({[name]: value})
   }
 
   async getAccount() {

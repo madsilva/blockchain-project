@@ -1,5 +1,5 @@
 import React from 'react'
-import {Form, FormGroup, Input, Button, Label} from 'reactstrap'
+import {Form, FormGroup, Input, Button, Label, Table} from 'reactstrap'
 
 const contract = require("@truffle/contract")
 const AffiliateContractJSON = require('./contracts/AffiliateContract.json')
@@ -15,6 +15,18 @@ class ContractInfoForm extends React.Component {
     this.affiliateSubcontract.setProvider(this.web3.currentProvider)
     this.state = {
       mainContractAddress: '',
+      subcontractsSoFar: '',
+      mainContractExpiration: '',
+      subcontractStake: '',
+      currentSubcontract: '',
+      owner: '',
+      affiliate: '',
+      totalSubcontracts: '',
+      subcontractDuration: '',
+      gracePeriodDuration: '',
+      incentiveFee: '',
+      affiliatePercentage: '',
+      oracle: '',
       subcontractAddress: '',
       subcontractIndex: 0
     }
@@ -27,8 +39,7 @@ class ContractInfoForm extends React.Component {
 
   handleInputChange(event) {
     const {name, value} = event.target
-    this.state[name] = value
-    this.setState(this.state)
+    this.setState({[name]: value})
   }
 
   printErrorMessage(error) {
@@ -47,6 +58,12 @@ class ContractInfoForm extends React.Component {
       const mainContractExpiration = await mainContract.contractExpiration.call()
       const subcontractStake = await mainContract.subcontractStake.call()
       const currentSubcontract = await mainContract.getCurrentSubcontract.call()
+      this.setState({
+        subcontractsSoFar: String(subcontractsSoFar),
+        mainContractExpiration: new Date(mainContractExpiration * 1000).toLocaleString("en-US"),
+        subcontractStake: String(this.web3.utils.fromWei(subcontractStake)),
+        currentSubcontract: String(currentSubcontract)
+      })
       console.log("subcontractsSoFar: " + subcontractsSoFar)
       console.log("mainContractExpiration: " + new Date(mainContractExpiration * 1000).toLocaleString("en-US"))
       console.log("subcontractStake: " + this.web3.utils.fromWei(subcontractStake))
@@ -67,6 +84,16 @@ class ContractInfoForm extends React.Component {
       const incentiveFee = await mainContract.incentiveFee.call()
       const affiliatePercentage = await mainContract.affiliatePercentage.call()
       const oracle = await mainContract.oracle.call()
+      this.setState({
+        owner: String(owner),
+        affiliate: String(affiliate),
+        totalSubcontracts: String(totalSubcontracts),
+        subcontractDuration: String(Number(subcontractDuration) / 60),
+        gracePeriodDuration: String(Number(gracePeriodDuration) / 60),
+        incentiveFee: String(this.web3.utils.fromWei(incentiveFee)),
+        affiliatePercentage: String(affiliatePercentage),
+        oracle: String(oracle)
+      })
       console.log("owner: " + owner)
       console.log("affiliate: " + affiliate)
       console.log("totalSubcontracts: " + totalSubcontracts)
@@ -140,8 +167,35 @@ class ContractInfoForm extends React.Component {
             id="mainContractAddress"
           />
           <Button color="primary" form='inputForm' onClick={ this.handleMainContractInfo }>Get main contract info</Button>
+          <Table bordered size="sm">
+            <tbody>
+              <tr>
+                <td>Subcontracts so far: { this.state.subcontractsSoFar }</td>
+                <td>Main contract expiration: { this.state.mainContractExpiration }</td>
+              </tr>
+              <tr>
+                <td>Subcontract stake: { this.state.subcontractStake } ETH</td>
+                <td>Current subcontract: { this.state.currentSubcontract }</td>
+              </tr>
+            </tbody>
+          </Table>
           <Button color="primary" form='inputForm' onClick={ this.handleMainContractParams }>Get main contract parameters</Button>
-          <br />
+          <Table bordered size="sm">
+            <tbody>
+              <tr>
+                <td>Owner: { this.state.owner }</td>
+                <td>Affiliate: { this.state.affiliate }</td>
+                <td>Total subcontracts: { this.state.totalSubcontracts }</td>
+                <td>Subcontract duration: { this.state.subcontractDuration } minutes</td>
+              </tr>
+              <tr>
+                <td>Grace period duration: { this.state.gracePeriodDuration } minutes</td>
+                <td>Incentive fee: { this.state.incentiveFee } ETH</td>
+                <td>Affiliate Percentage: { this.state.affiliatePercentage }</td>
+                <td>Oracle: { this.state.oracle }</td>
+              </tr>
+            </tbody>
+          </Table>
           <Label for="subcontractIndex">Subcontract index</Label>
           <Input
             type="text"
