@@ -16,7 +16,7 @@ class NewContractForm extends React.Component {
     // Note: all monetary amounts are in Ether and all time amounts are in minutes.
     this.state = {
       affiliateAddress: '',
-      oracleAddress: '',
+      formOracleAddress: '',
       subcontractStake: 1,
       totalSubcontracts: 3,
       subcontractDuration: 1,
@@ -24,7 +24,11 @@ class NewContractForm extends React.Component {
       contractEndGracePeriodDuration: 1,
       // Integer percentage
       affiliateRate: 10,
-      incentiveFee: 1
+      incentiveFee: 1,
+      contractErrorMessage: '',
+      newContractAddress: '',
+      firstSubcontractAddress: '',
+      displayOracleAddress: ''
     }
     this.handleInputChange = this.handleInputChange.bind(this)
     this.handleCreateNewContract = this.handleCreateNewContract.bind(this)
@@ -34,6 +38,7 @@ class NewContractForm extends React.Component {
   handleInputChange(event) {
     const {name, value} = event.target
     this.setState({[name]: value})
+    this.setState({contractErrorMessage: ''})
   }
 
   async getAccount() {
@@ -49,6 +54,7 @@ class NewContractForm extends React.Component {
     if (error.message.startsWith("Internal JSON-RPC error.")) {
       const message = JSON.parse(error.message.replace("Internal JSON-RPC error.", ""))
       console.log("Internal JSON-RPC error: " + message.message)
+      this.setState({contractErrorMessage: "Contract error: " + message.message})
     } else {
       console.log(error)
     }
@@ -76,11 +82,12 @@ class NewContractForm extends React.Component {
 
   async handleCreateNewContract(event) {
     try {
+      this.setState({contractErrorMessage: ''})
       const account = await this.getAccount()
       // The duration values need to be converted into seconds, currently they are given in minutes.
       const newContract = await this.affiliateContract.new(
         this.state.affiliateAddress,
-        this.state.oracleAddress,
+        this.state.formOracleAddress,
         this.state.totalSubcontracts,
         Number(this.state.subcontractDuration) * 60,
         Number(this.state.sellerGracePeriodDuration) * 60,
@@ -91,9 +98,11 @@ class NewContractForm extends React.Component {
         this.state.affiliateRate,
         {from: account, value: this.web3.utils.toWei(String(Number(this.state.incentiveFee) + Number(this.state.subcontractStake)))}
       )
-      console.log("address: " + newContract.address)
       const subcontract = await newContract.getCurrentSubcontract.call()
-      console.log("first subcontract: " + subcontract)
+      this.setState({
+        newContractAddress: String(newContract.address),
+        firstSubcontractAddress: String(subcontract)
+      })
     } catch(err) {
       this.printErrorMessage(err)
     }
@@ -104,7 +113,7 @@ class NewContractForm extends React.Component {
     this.affiliateOracle.setNetwork(networkId)
     const address = AffiliateOracleJSON.networks[networkId].address
     const oracle = await this.affiliateOracle.at(address)
-    console.log("oracle address: " + address)
+    this.setState({displayOracleAddress: String(address)})
   }
 
   render() {
@@ -113,6 +122,7 @@ class NewContractForm extends React.Component {
       <h2>Create a new affiliate contract</h2>
       <h3>The current account in Metamask will be the owner of this contract.</h3>
       <Button color="primary" form='inputForm' onClick={ this.handleGetOracleAddress }>Get default oracle address</Button>
+      { this.state.displayOracleAddress }
       <FormGroup>
         <Label for="affiliateAddress">Affiliate's Ethereum Wallet Address</Label>
         <Input
@@ -127,10 +137,10 @@ class NewContractForm extends React.Component {
         <Label for="affiliateAddress">Oracle Address</Label>
         <Input
           type="text"
-          name = "oracleAddress"
-          defaultValue={this.state.oracleAddress}
+          name = "formOracleAddress"
+          defaultValue={this.state.formOracleAddress}
           onChange={this.handleInputChange}
-          id="oracleAddress"
+          id="formOracleAddress"
         />
       </FormGroup>
       <FormGroup>
@@ -220,6 +230,11 @@ class NewContractForm extends React.Component {
         />
       </FormGroup>
       <Button color="primary" form='inputForm' onClick={ this.handleCreateNewContract }>Submit</Button>
+      <div>
+        { this.state.contractErrorMessage }
+      </div>
+      <h2>New contract address: { this.state.newContractAddress }</h2>
+      <h2>First subcontract address: { this.state.firstSubcontractAddress }</h2>
     </Form>
     </React.Fragment>)
   }

@@ -76,12 +76,6 @@ class ContractInfoForm extends React.Component {
         subcontractStake: String(this.web3.utils.fromWei(subcontractStake)),
         currentSubcontract: String(currentSubcontract)
       })
-      /*
-      console.log("subcontractsSoFar: " + this.state.subcontractsSoFar)
-      console.log("mainContractExpiration: " + this.state.mainContractExpiration)
-      console.log("subcontractStake: " + this.state.subcontractStake)
-      console.log("currentSubcontract: " + this.state.currentSubcontract)
-      */
     } catch(err) {
       console.log(err)
     }
@@ -108,16 +102,6 @@ class ContractInfoForm extends React.Component {
         affiliatePercentage: String(affiliatePercentage),
         oracle: String(oracle)
       })
-      /*
-      console.log("owner: " + this.state.owner)
-      console.log("affiliate: " + this.state.affiliate)
-      console.log("totalSubcontracts: " + this.state.totalSubcontracts)
-      console.log("subcontractDuration: " + subcontractDuration + " sec")
-      console.log("gracePeriodDuration: " + gracePeriodDuration + " sec")
-      console.log("incentiveFee: " + this.state.incentiveFee)
-      console.log("affiliatePercentage: " + this.state.affiliatePercentage + "%")
-      console.log("oracle: " + this.state.oracle)
-      */
     } catch(err) {
       console.log(err)
     } 
@@ -132,7 +116,6 @@ class ContractInfoForm extends React.Component {
       } else {
         const result = await mainContract.subcontracts.call(this.state.subcontractIndex)
         this.setState({subcontractAtIndex: String(result)})
-        //console.log("Subcontract at given index: " + this.state.subcontractAtIndex)
       }
     } catch(err) {
       this.printErrorMessage(err)
@@ -166,19 +149,6 @@ class ContractInfoForm extends React.Component {
         startTime: new Date(startTime * 1000).toLocaleString("en-US"),
         payout: String(payout)
       })
-      /*
-      console.log("mainContractAddress: " + this.state.mainContractAddress)
-      console.log("subcontractExpiration: " + this.state.subcontractExpiration)
-      console.log("sellerGracePeriodEnd: " + this.state.sellerGracePeriodEnd)
-      console.log("indexNumber: " + this.state.indexNumber)
-      console.log("nextSubcontractAddress: " + this.state.nextSubcontractAddress)
-      console.log("affiliateResolved: " + this.state.affiliateResolved)
-      console.log("gracePeriodExpired: " + this.state.gracePeriodExpired)
-      console.log("currentTotal: " + this.state.currentTotal)
-      console.log("totalLastUpdated: " + this.state.totalLastUpdated)
-      console.log("startTime: " + this.state.startTime)
-      console.log("payout: " + this.state.payout)
-      */
     } catch(err) {
       console.log(err)
     }

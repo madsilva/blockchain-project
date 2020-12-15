@@ -11,7 +11,8 @@ class AffiliateActionsForm extends React.Component {
     this.affiliateSubcontract = contract({abi: AffiliateSubcontractJSON.abi})
     this.affiliateSubcontract.setProvider(this.web3.currentProvider)
     this.state = {
-      subcontractAddress: ''
+      subcontractAddress: '',
+      contractErrorMessage: ''
     }
     this.handleInputChange = this.handleInputChange.bind(this)
     this.handleUpdateTotal = this.handleUpdateTotal.bind(this)
@@ -21,6 +22,7 @@ class AffiliateActionsForm extends React.Component {
   handleInputChange(event) {
     const {name, value} = event.target
     this.setState({[name]: value})
+    this.setState({contractErrorMessage: ''})
   }
 
   async getAccount() {
@@ -36,6 +38,7 @@ class AffiliateActionsForm extends React.Component {
     if (error.message.startsWith("Internal JSON-RPC error.")) {
       const message = JSON.parse(error.message.replace("Internal JSON-RPC error.", ""))
       console.log("Internal JSON-RPC error: " + message.message)
+      this.setState({contractErrorMessage: "Contract error: " + message.message})
     } else {
       console.log(error)
     }
@@ -43,6 +46,7 @@ class AffiliateActionsForm extends React.Component {
 
   async handleUpdateTotal(event) {
     try {
+      this.setState({contractErrorMessage: ''})
       const account = await this.getAccount()
       const subcontract = await this.affiliateSubcontract.at(this.state.subcontractAddress.trim())
       await subcontract.updateCurrentTotal.estimateGas({from: account})
@@ -55,6 +59,7 @@ class AffiliateActionsForm extends React.Component {
 
   async handleResolveSubcontract(event) {
     try {
+      this.setState({contractErrorMessage: ''})
       const account = await this.getAccount()
       const subcontract = await this.affiliateSubcontract.at(this.state.subcontractAddress.trim())
       await subcontract.affiliateResolve.estimateGas({from: account})
@@ -81,6 +86,9 @@ class AffiliateActionsForm extends React.Component {
       </FormGroup>
       <Button color="primary" form='inputForm' onClick={ this.handleUpdateTotal }>Update total</Button>
       <Button color="primary" form='inputForm' onClick={ this.handleResolveSubcontract }>Resolve subcontract</Button>
+      <div>
+        { this.state.contractErrorMessage }
+      </div>
     </Form>
     </React.Fragment>)
   }

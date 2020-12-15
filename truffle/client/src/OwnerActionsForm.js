@@ -12,7 +12,8 @@ class OwnerActionsForm extends React.Component {
     this.affiliateContract.setProvider(this.web3.currentProvider)
     this.state = {
       mainContractAddress: '',
-      txValue: 0
+      txValue: 0,
+      contractErrorMessage: ''
     }
     this.handleInputChange = this.handleInputChange.bind(this)
     this.handleCreateNextSubcontract = this.handleCreateNextSubcontract.bind(this)
@@ -22,6 +23,7 @@ class OwnerActionsForm extends React.Component {
   handleInputChange(event) {
     const {name, value} = event.target
     this.setState({[name]: value})
+    this.setState({contractErrorMessage: ''})
   }
 
   async getAccount() {
@@ -37,6 +39,7 @@ class OwnerActionsForm extends React.Component {
     if (error.message.startsWith("Internal JSON-RPC error.")) {
       const message = JSON.parse(error.message.replace("Internal JSON-RPC error.", ""))
       console.log("Internal JSON-RPC error: " + message.message)
+      this.setState({contractErrorMessage: "Contract error: " + message.message})
     } else {
       console.log(error)
     }
@@ -44,10 +47,11 @@ class OwnerActionsForm extends React.Component {
   
   async handleCreateNextSubcontract(event) {
     try {
+      this.setState({contractErrorMessage: ''})
       const account = await this.getAccount()
       const mainContract = await this.affiliateContract.at(this.state.mainContractAddress.trim())
-      await mainContract.createNextSubContract.estimateGas({from: account, value: this.web3.utils.toWei(this.state.txValue)})
-      const result = await mainContract.createNextSubContract({from: account, value: this.web3.utils.toWei(this.state.txValue)})
+      await mainContract.createNextSubContract.estimateGas({from: account, value: this.web3.utils.toWei(String(this.state.txValue))})
+      const result = await mainContract.createNextSubContract({from: account, value: this.web3.utils.toWei(String(this.state.txValue))})
       console.log(result)
     } catch(err) {
       this.printErrorMessage(err)
@@ -56,6 +60,7 @@ class OwnerActionsForm extends React.Component {
 
   async handleResolveMainContract(event) {
     try {
+      this.setState({contractErrorMessage: ''})
       const account = await this.getAccount()
       const mainContract = await this.affiliateContract.at(this.state.mainContractAddress.trim())
       await mainContract.sellerResolve.estimateGas({from: account})
@@ -92,6 +97,9 @@ class OwnerActionsForm extends React.Component {
           />
         </FormGroup>
         <Button color="primary" form='inputForm' onClick={ this.handleCreateNextSubcontract }>Create next subcontract</Button>
+        <div>
+          { this.state.contractErrorMessage }
+        </div>
       </Form>
     </React.Fragment>)
   }
