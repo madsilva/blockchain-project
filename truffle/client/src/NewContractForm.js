@@ -109,11 +109,15 @@ class NewContractForm extends React.Component {
   }
 
   async handleGetOracleAddress(event) {
-    const networkId = await this.web3.eth.net.getId()
-    this.affiliateOracle.setNetwork(networkId)
-    const address = AffiliateOracleJSON.networks[networkId].address
-    const oracle = await this.affiliateOracle.at(address)
-    this.setState({displayOracleAddress: String(address)})
+    try {
+      const networkId = await this.web3.eth.net.getId()
+      this.affiliateOracle.setNetwork(networkId)
+      const address = AffiliateOracleJSON.networks[networkId].address
+      await this.affiliateOracle.at(address)
+      this.setState({displayOracleAddress: String(address)})
+    } catch(err) {
+      console.log(err)
+    }
   }
 
   render() {
