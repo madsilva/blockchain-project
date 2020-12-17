@@ -11,7 +11,6 @@ const affiliateContract = contract({abi: AffiliateContractJSON.abi, bytecode: Af
 const affiliateSubcontract = contract({abi: AffiliateSubcontractJSON.abi})
 let web3js = {}
 
-//const initbalance={'Seller':0,'Affiliate':0}
 const gasSpending={'Seller':0,'Affiliate':0}
 const nSubcontracts = 4;
 const sliceLength = 100;
@@ -20,7 +19,6 @@ const AGPlength = 50;
 const commission = "0x3030313130303131303031313030313130303131303031313030313130303030";
 const IFammount= 2;
 const sliceMPE= 5;
-const sliceTimes=[];
 
 
 function logColor(message,color){
@@ -35,18 +33,11 @@ function logColor(message,color){
 
 async function filterEvents (callerContract,index) {
   try{
-
     callerContract.CurrentTotalUpdatedEvent()
   .on('data', event => logColor('Oracle Response: Slice ' + index + ' sales:' + event.returnValues.currentTotal,"cyan"));
-  //callerContract.events.CurrentTotalUpdatedEvent({ filter: { } }, async (err, event) => {
-  //  if (err) { 
-  //    console.error('Error on event', err)
-  //  } 
-  //  console.log('SC' + index + ' * New CurrentTotalUpdated event. affiliateTotal: ' + event.returnValues.currentTotal)
-  //})
 } catch(error){
   console.log(error)
-}
+  }
 }
 
 async function init (nSC, scDuration, SGPDuration, AGPDuration, scStake, incentiveFee, commissionRate ) {
@@ -70,6 +61,7 @@ async function init (nSC, scDuration, SGPDuration, AGPDuration, scStake, incenti
     web3js.utils.toWei(scStake),
     web3js.utils.toWei(incentiveFee),
     commissionRate,
+    10,
     {from: ownerAddr, value: web3js.utils.toWei(txVal)}
   )
   console.log("deployed")
@@ -81,15 +73,12 @@ async function init (nSC, scDuration, SGPDuration, AGPDuration, scStake, incenti
   } catch(error){
     console.log(error)
   }
-  //console.log(mainContract.address) 
-  //console.log(sc0.address) 
   console.log("Oracle Addr: "+oracleAddr)
   console.log("Affiliate Addr: "+affiliateAddr)
   console.log("Seller Addr: "+ownerAddr)
   return { sc0, mainContract, ownerAddr, affiliateAddr, oracleAddr, web3js } 
 }
 
-//agp=300
 
 async function gaslog(caller,tx){
   gasUsed=tx['receipt']["gasUsed"]
@@ -114,9 +103,6 @@ async function checkSales(scIndex,caller){
 async function createNextSubContract(sliceIndex,caller){
   console.log(caller+" Called createNextSubContract on main contract to create SC"+sliceIndex)
   gaslog(caller,await contracts["main"].createNextSubContract({from: addresses[caller],gas: 2000000,value: web3js.utils.toWei(''+sliceMPE)}))
-  //var txvalue= (await web3js.eth.getTransaction(tx['tx']))['value']
-  //console.log(txvalue)
-
 }
 
 async function getCurrentSubcontract(sliceIndex,caller){
@@ -133,9 +119,6 @@ async function affiliateResolve(scIndex,caller){
   gaslog(caller,await contracts[''+scIndex].affiliateResolve({from: addresses[caller],gas: 2000000}))
   var payout = await contracts[''+scIndex].payout.call()
   console.log("SC"+scIndex+" Resolved, "+payout+" wei transfered to Affiliate's wallet")
-  //var txvalue= (await web3js.eth.getTransaction(tx['tx']))//['value']
-  //console.log(tx)
-  //console.log(txvalue)
 }
 
 async function sellerResolve(caller){
@@ -154,7 +137,6 @@ async function nextSlice() {
   if(index+1<nSubcontracts){
     logColor("TIME: Slice " + (index+1) + " started","magenta");
     if(index+1<nSubcontracts){
-      console.log("debug:" +index)
       let temp=index+1
       logColor("TIME: SC" + (index+1) + " Seller Grace Period started","magenta");
       setTimeout(function() { logColor("TIME: SC" + (temp) + " Seller Grace Period ended","magenta"); }, SGPlength*1000);
@@ -175,7 +157,6 @@ async function nextSlice() {
 		setTimeout(nextSlice, sliceLength*1000);
     }
 }
-
 
 
 const now = new Date()  
@@ -246,9 +227,6 @@ async function sliceActions(slice) {
   addresses["Seller"]=ownerAddr
   contracts['main']=mainContract
   contracts['0']=sc0
-  //initbalance["Seller"] = Number(await web3js.eth.getBalance(ownerAddr));
-  //initbalance["Affiliate"] = Number(await web3js.eth.getBalance(affiliateAddr));
-  //console.log(initbalance)
   console.log("Seller called setOracleAddress")
   gaslog("Seller",await mainContract.setOracleAddress(oracleAddr, {from: ownerAddr}))
   
@@ -257,28 +235,5 @@ async function sliceActions(slice) {
   var nowEpoch = (Math.floor(now.getTime()/1000)) 
   setTimeout(nextSlice, (sliceLength-(nowEpoch-startTime))*1000);
   temp=Number(startTime)
-  for(var i=0; i<nSubcontracts;i++){
-    sliceTimes[i]=temp
-    temp+=sliceLength
-  }
   sliceActions(0)
-
-  
-
-  //console.log(""+Math.floor(now.getTime()/1000))
-  //console.log(""+Math.floor(now.getUTCMilliseconds()/1000))
-  //console.log(""+nowEpoch)
-  //console.log("Start Time:"+startTime)
-
-  //console.log(((nowEpoch-startTime)).toString())  
-  //const gas=await sc0.updateCurrentTotal.estimateGas({from: affiliateAddr})
-  //console.log(gas)
-  //await sc0.updateCurrentTotal({from: affiliateAddr,gas: 2000000})
-
-
-
-  /*setInterval( async () => { 
-    await subcontract.methods.updateCurrentTotal().send({ from: accounts[1], gas: 200000 })
-  }, SLEEP_INTERVAL);*/
-
 })()
