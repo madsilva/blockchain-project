@@ -1,5 +1,5 @@
 import React from 'react'
-import {Form, FormGroup, Input, Button, Label} from 'reactstrap'
+import {Form, FormGroup, Input, Button, Label, Alert} from 'reactstrap'
 
 var contract = require("@truffle/contract")
 const AffiliateContractJSON = require('./contracts/AffiliateContract.json')
@@ -37,8 +37,7 @@ class NewContractForm extends React.Component {
 
   handleInputChange(event) {
     const {name, value} = event.target
-    this.setState({[name]: value})
-    this.setState({contractErrorMessage: ''})
+    this.setState({[name]: value, contractErrorMessage: ''})
   }
 
   async getAccount() {
@@ -57,6 +56,7 @@ class NewContractForm extends React.Component {
       this.setState({contractErrorMessage: "Contract error: " + message.message})
     } else {
       console.log(error)
+      this.setState({contractErrorMessage: "Error: " + error.message})
     }
   }
 
@@ -110,21 +110,22 @@ class NewContractForm extends React.Component {
 
   async handleGetOracleAddress(event) {
     try {
+      this.setState({contractErrorMessage: ''})
       const networkId = await this.web3.eth.net.getId()
       this.affiliateOracle.setNetwork(networkId)
       const address = AffiliateOracleJSON.networks[networkId].address
       await this.affiliateOracle.at(address)
       this.setState({displayOracleAddress: String(address)})
     } catch(err) {
-      console.log(err)
+      this.printErrorMessage(err)
     }
   }
 
   render() {
     return(<React.Fragment>
     <Form id="inputForm">
-      <h2>Create a new affiliate contract</h2>
-      <h3>The current account in Metamask will be the owner of this contract.</h3>
+      <h4>Create a new affiliate contract</h4>
+      <h5>The current account in Metamask will be the owner of this contract.</h5>
       <Button color="primary" form='inputForm' onClick={ this.handleGetOracleAddress }>Get default oracle address</Button>
       { this.state.displayOracleAddress }
       <FormGroup>
@@ -234,9 +235,11 @@ class NewContractForm extends React.Component {
         />
       </FormGroup>
       <Button color="primary" form='inputForm' onClick={ this.handleCreateNewContract }>Submit</Button>
-      <div>
-        { this.state.contractErrorMessage }
-      </div>
+      <FormGroup>
+          <Alert color="warning">
+            { this.state.contractErrorMessage }
+          </Alert>
+      </FormGroup>
       <h2>New contract address: { this.state.newContractAddress }</h2>
       <h2>First subcontract address: { this.state.firstSubcontractAddress }</h2>
     </Form>

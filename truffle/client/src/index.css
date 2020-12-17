@@ -8,11 +8,13 @@ body {
 }
 
 code {
+  font-size: 10pt;
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
 
-.App {
+.highlight {
+  color: blue;
 
 }
 
@@ -35,9 +37,7 @@ code {
   color: #09d3ac;
 }
 
-div {
-  margin: 15px;
-}
+
 
 .logs {
   background-color: black;
@@ -58,6 +58,15 @@ div {
 
 .nav-tabs {
   margin-bottom: 0;
+  margin-top: 25px;
+}
+
+.nav-item {
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  border-top: 1px solid #ddd;
+  border-left: 1px solid #ddd;
+  border-right: 1px solid #ddd;
 }
 
 input.form-control {

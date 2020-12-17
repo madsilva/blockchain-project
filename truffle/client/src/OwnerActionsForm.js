@@ -1,5 +1,5 @@
 import React from 'react'
-import {Form, FormGroup, Input, Button, Label} from 'reactstrap'
+import {Form, FormGroup, Input, Button, Label, Alert} from 'reactstrap'
 
 var contract = require("@truffle/contract")
 const AffiliateContractJSON = require('./contracts/AffiliateContract.json')
@@ -22,8 +22,7 @@ class OwnerActionsForm extends React.Component {
 
   handleInputChange(event) {
     const {name, value} = event.target
-    this.setState({[name]: value})
-    this.setState({contractErrorMessage: ''})
+    this.setState({[name]: value, contractErrorMessage: ''})
   }
 
   async getAccount() {
@@ -42,6 +41,7 @@ class OwnerActionsForm extends React.Component {
       this.setState({contractErrorMessage: "Contract error: " + message.message})
     } else {
       console.log(error)
+      this.setState({contractErrorMessage: "Error: " + error.message})
     }
   }
   
@@ -74,7 +74,8 @@ class OwnerActionsForm extends React.Component {
   render() {
     return(<React.Fragment>
       <Form id="inputForm">
-        <h2>Perform owner actions</h2>
+        <h4>Perform owner actions</h4>
+        <h5>Must be logged in as owner.</h5>
         <FormGroup>
           <Label for="mainContractAddress">Main contract address</Label>
           <Input
@@ -84,8 +85,8 @@ class OwnerActionsForm extends React.Component {
             onChange={this.handleInputChange}
             id="mainContractAddress" 
           />
+          <Button color="primary" form='inputForm' onClick={ this.handleResolveMainContract }>Resolve main contract</Button>
         </FormGroup>
-        <Button color="primary" form='inputForm' onClick={ this.handleResolveMainContract }>Resolve main contract</Button>
         <FormGroup>
           <Label for="txValue">Transaction value (for create next subcontract), in Ether</Label>
           <Input
@@ -95,11 +96,13 @@ class OwnerActionsForm extends React.Component {
             onChange={this.handleInputChange}
             id="txValue" 
           />
+          <Button color="primary" form='inputForm' onClick={ this.handleCreateNextSubcontract }>Create next subcontract</Button>
         </FormGroup>
-        <Button color="primary" form='inputForm' onClick={ this.handleCreateNextSubcontract }>Create next subcontract</Button>
-        <div>
-          { this.state.contractErrorMessage }
-        </div>
+        <FormGroup>
+          <Alert color="warning">
+            { this.state.contractErrorMessage }
+          </Alert>
+        </FormGroup>
       </Form>
     </React.Fragment>)
   }
