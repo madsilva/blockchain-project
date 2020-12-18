@@ -151,7 +151,7 @@ class NewContractForm extends React.Component {
         </Col>
       </FormGroup>
       <FormGroup row>
-        <Label for="subcontractDuration" sm={3}>Per-subcontract duration in minutes</Label>
+        <Label for="subcontractDuration" sm={4}>Per-subcontract duration in minutes</Label>
         <Col>
         <Input
           type="number"
@@ -165,7 +165,7 @@ class NewContractForm extends React.Component {
         </Col>
       </FormGroup>
       <FormGroup row>
-        <Label for="sellerGracePeriodDuration" sm={3}>Seller grace period duration in minutes</Label>
+        <Label for="sellerGracePeriodDuration" sm={4}>Seller grace period duration in minutes</Label>
         <Col>
         <Input
           type="number"
@@ -179,7 +179,7 @@ class NewContractForm extends React.Component {
         </Col>
       </FormGroup>
       <FormGroup row>
-        <Label for="contractEndGracePeriodDuration" sm={3}>Contract end grace period duration in minutes</Label>
+        <Label for="contractEndGracePeriodDuration" sm={4}>Contract end grace period duration in minutes</Label>
         <Col>
         <Input
           type="number"
@@ -233,7 +233,7 @@ class NewContractForm extends React.Component {
         </Col>
       </FormGroup>
       <FormGroup row>
-        <Label for="affiliateRate" sm={3}>Commission rate as an integer percentage</Label>
+        <Label for="affiliateRate" sm={3}>Commission rate as an integer %</Label>
         <Col>
         <Input
           type="number"
@@ -246,7 +246,7 @@ class NewContractForm extends React.Component {
         </Col>
       </FormGroup>
       <FormGroup>
-        <Button color="primary" form='inputForm' onClick={ this.handleCreateNewContract }>Submit</Button>
+        <Button color="primary" form='inputForm' onClick={ this.handleCreateNewContract }>Deploy new contract</Button>
       </FormGroup>
       { this.state.contractErrorMessage != '' &&
         <FormGroup>

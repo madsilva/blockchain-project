@@ -1,5 +1,5 @@
 import React from 'react'
-import {Form, FormGroup, Input, Button, Label, Alert, Col} from 'reactstrap'
+import {Form, FormGroup, Input, Button, Label, Alert} from 'reactstrap'
 
 var contract = require("@truffle/contract")
 const AffiliateSubcontractJSON = require('./contracts/AffiliateSubcontract.json')
@@ -75,9 +75,8 @@ class AffiliateActionsForm extends React.Component {
     <Form id="inputForm">
       <h4>Perform affiliate actions</h4>
       <h5>Must be logged in as affiliate.</h5>
-      <FormGroup row>
-        <Label for="subcontractAddress" sm={3}>Subcontract address</Label>
-        <Col>
+      <FormGroup>
+        <Label for="subcontractAddress">Subcontract address</Label>
         <Input
           type="text"
           name = "subcontractAddress"
@@ -85,12 +84,12 @@ class AffiliateActionsForm extends React.Component {
           onChange={this.handleInputChange}
           id="subcontractAddress"
         />
-        </Col>
       </FormGroup>
       <FormGroup>
         <Button color="primary" form='inputForm' onClick={ this.handleUpdateTotal }>Update total</Button>
         <Button color="primary" form='inputForm' onClick={ this.handleResolveSubcontract }>Resolve subcontract</Button>
       </FormGroup>
+      <p>Remember to wait a little bit for the oracle call to go through after calling update total before calling it again or checking the total.</p>
       { this.state.contractErrorMessage != '' &&
         <FormGroup>
           <Alert color="danger">

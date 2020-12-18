@@ -1,5 +1,5 @@
 import React from 'react'
-import {Form, FormGroup, Input, Button, Label, Table, Alert, Col} from 'reactstrap'
+import {Form, FormGroup, Input, Button, Label, Table, Alert, Row, Col} from 'reactstrap'
 
 const contract = require("@truffle/contract")
 const AffiliateContractJSON = require('./contracts/AffiliateContract.json')
@@ -162,18 +162,22 @@ class ContractInfoForm extends React.Component {
             </Alert>
           </FormGroup>
         }
-        <FormGroup row>
-          <Label for="mainContractAddress" sm={3}>Main contract address</Label>
-          <Col>
-          <Input
-            type="text"
-            name = "mainContractAddress"
-            defaultValue={this.state.mainContractAddress}
-            onChange={this.handleInputChange}
-            id="mainContractAddress"
-          />
-          </Col>
-          <Button color="primary" form='inputForm' onClick={ this.handleMainContractInfo }>Get main contract info</Button>
+        <FormGroup>
+          <Label for="mainContractAddress">Main contract address</Label>
+          <Row>
+            <Col>
+            <Input
+              type="text"
+              name = "mainContractAddress"
+              defaultValue={this.state.mainContractAddress}
+              onChange={this.handleInputChange}
+              id="mainContractAddress"
+            />
+            </Col>
+            <Col sm={3}>
+            <Button color="primary" form='inputForm' onClick={ this.handleMainContractInfo }>Get main contract info</Button>
+            </Col>
+          </Row>
         </FormGroup>
         <Table bordered size="sm">
           <tbody>
@@ -211,18 +215,22 @@ class ContractInfoForm extends React.Component {
             </tr>
           </tbody>
         </Table>
-        <FormGroup row>
-          <Label for="subcontractIndex" sm={3}>Subcontract index</Label>
-          <Col>
-          <Input
-            type="text"
-            name = "subcontractIndex"
-            defaultValue={this.state.subcontractIndex}
-            onChange={this.handleInputChange}
-            id="subcontractIndex"
-          />
-          </Col>
-          <Button color="primary" form='inputForm' onClick={ this.handleSubcontractIndex }>Get subcontract address</Button>
+        <FormGroup>
+          <Label for="subcontractIndex">Subcontract index (requires main contract address)</Label>
+          <Row>
+            <Col>
+            <Input
+              type="text"
+              name = "subcontractIndex"
+              defaultValue={this.state.subcontractIndex}
+              onChange={this.handleInputChange}
+              id="subcontractIndex"
+            />
+            </Col>
+            <Col sm={3}>
+            <Button color="primary" form='inputForm' onClick={ this.handleSubcontractIndex }>Get subcontract address</Button>
+            </Col>
+          </Row>
         </FormGroup>
         <Table bordered size="sm">
           <tbody>
@@ -231,21 +239,28 @@ class ContractInfoForm extends React.Component {
             </tr>
           </tbody>
         </Table>
-        <FormGroup row>
-          <Label for="subcontractAddress" sm={3}>Subcontract address</Label>
-          <Col>
-          <Input
-            type="text"
-            name = "subcontractAddress"
-            defaultValue={this.state.subcontractAddress}
-            onChange={this.handleInputChange}
-            id="subcontractAddress"
-          />
-          </Col>
-          <Button color="primary" form='inputForm' onClick={ this.handleSubcontractInfo }>Get subcontract info</Button>
+        <FormGroup>
+          <Label for="subcontractAddress">Subcontract address</Label>
+          <Row>
+            <Col>
+            <Input
+              type="text"
+              name = "subcontractAddress"
+              defaultValue={this.state.subcontractAddress}
+              onChange={this.handleInputChange}
+              id="subcontractAddress"
+            />
+            </Col>
+            <Col sm={3}>
+            <Button color="primary" form='inputForm' onClick={ this.handleSubcontractInfo }>Get subcontract info</Button>
+            </Col>
+          </Row>
         </FormGroup>
         <Table bordered size="sm">
           <tbody>
+            <tr>
+              <th>Subcontract info</th>
+            </tr>
             <tr>
               <td>Main contract address: <span className="highlight">{ this.state.subcontractMainContractAddress }</span></td>
               <td>Next subcontract: <span className="highlight">{ this.state.nextSubcontractAddress }</span></td>

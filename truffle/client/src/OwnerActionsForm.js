@@ -1,5 +1,5 @@
 import React from 'react'
-import {Form, FormGroup, Input, Button, Label, Alert, Col} from 'reactstrap'
+import {Form, FormGroup, Input, Button, Label, Alert} from 'reactstrap'
 
 var contract = require("@truffle/contract")
 const AffiliateContractJSON = require('./contracts/AffiliateContract.json')
@@ -76,9 +76,8 @@ class OwnerActionsForm extends React.Component {
       <Form id="inputForm">
         <h4>Perform owner actions</h4>
         <h5>Must be logged in as owner.</h5>
-        <FormGroup row>
-          <Label for="mainContractAddress" sm={3}>Main contract address</Label>
-          <Col>
+        <FormGroup>
+          <Label for="mainContractAddress">Main contract address</Label>
           <Input
             type="text"
             name = "mainContractAddress"
@@ -86,7 +85,6 @@ class OwnerActionsForm extends React.Component {
             onChange={this.handleInputChange}
             id="mainContractAddress" 
           />
-          </Col>
         </FormGroup>
         <FormGroup>
           <Button color="primary" form='inputForm' onClick={ this.handleCreateNextSubcontract }>Create next subcontract</Button>
