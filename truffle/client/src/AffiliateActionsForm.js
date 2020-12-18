@@ -1,5 +1,5 @@
 import React from 'react'
-import {Form, FormGroup, Input, Button, Label} from 'reactstrap'
+import {Form, FormGroup, Input, Button, Label, Alert} from 'reactstrap'
 
 var contract = require("@truffle/contract")
 const AffiliateSubcontractJSON = require('./contracts/AffiliateSubcontract.json')
@@ -21,8 +21,7 @@ class AffiliateActionsForm extends React.Component {
 
   handleInputChange(event) {
     const {name, value} = event.target
-    this.setState({[name]: value})
-    this.setState({contractErrorMessage: ''})
+    this.setState({[name]: value, contractErrorMessage: ''})
   }
 
   async getAccount() {
@@ -41,6 +40,7 @@ class AffiliateActionsForm extends React.Component {
       this.setState({contractErrorMessage: "Contract error: " + message.message})
     } else {
       console.log(error)
+      this.setState({contractErrorMessage: "Error: " + error.message})
     }
   }
 
@@ -73,7 +73,8 @@ class AffiliateActionsForm extends React.Component {
   render() {
     return(<React.Fragment>
     <Form id="inputForm">
-      <h2>Perform affiliate actions</h2>
+      <h4>Perform affiliate actions</h4>
+      <h5>Must be logged in as affiliate.</h5>
       <FormGroup>
         <Label for="subcontractAddress">Subcontract address</Label>
         <Input
@@ -84,11 +85,18 @@ class AffiliateActionsForm extends React.Component {
           id="subcontractAddress"
         />
       </FormGroup>
-      <Button color="primary" form='inputForm' onClick={ this.handleUpdateTotal }>Update total</Button>
-      <Button color="primary" form='inputForm' onClick={ this.handleResolveSubcontract }>Resolve subcontract</Button>
-      <div>
-        { this.state.contractErrorMessage }
-      </div>
+      <FormGroup>
+        <Button color="primary" form='inputForm' onClick={ this.handleUpdateTotal }>Update total</Button>
+        <Button color="primary" form='inputForm' onClick={ this.handleResolveSubcontract }>Resolve subcontract</Button>
+      </FormGroup>
+      <p>Remember to wait a little bit for the oracle call to go through after calling update total before calling it again or checking the total.</p>
+      { this.state.contractErrorMessage !== '' &&
+        <FormGroup>
+          <Alert color="danger">
+            { this.state.contractErrorMessage }
+          </Alert>
+        </FormGroup>
+      }
     </Form>
     </React.Fragment>)
   }

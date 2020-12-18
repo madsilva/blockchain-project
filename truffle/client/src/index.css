@@ -8,44 +8,34 @@ body {
 }
 
 code {
+  font-size: 10pt;
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
 
-.App {
-
+.highlight {
+  font-weight: bold;
 }
 
-.App-logo {
-  height: 40vmin;
+.large {
+  font-size: 18pt;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+button {
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
-.App-link {
+.table {
+  font-size: 11pt;
+}
+
+.navbar-brand {
   color: #09d3ac;
 }
 
-div {
-  margin: 15px;
-}
-
-.logs {
-  background-color: black;
-  font-size: 14px;
-  color: white;
-  font-weight: bold;
-  padding: 10px;
-  border-radius: 8px;
+.form-group {
+  margin: 10px;
 }
 
 .tab-content {
@@ -58,28 +48,15 @@ div {
 
 .nav-tabs {
   margin-bottom: 0;
+  margin-top: 25px;
 }
 
-input.form-control {
+.nav-item {
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  border-top: 1px solid #ddd;
+  border-left: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+  margin-left: 5px;
   margin-right: 5px;
-}
-
-.alert-result {
-  margin-left: 0;
-}
-
-.small-input {
-  width: 200px;
-}
-
-.inline-input-btn .form-control {
-  margin: 0;
-  width: 200px;
-  border-radius: 0.25rem 0 0 0.25rem;
-  float: left;
-  border-right: 0;
-}
-
-.inline-input-btn .btn {
-  border-radius: 0 0.25rem 0.25rem 0;
 }

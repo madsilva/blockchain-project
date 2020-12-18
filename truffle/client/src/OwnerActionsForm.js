@@ -1,5 +1,5 @@
 import React from 'react'
-import {Form, FormGroup, Input, Button, Label} from 'reactstrap'
+import {Form, FormGroup, Input, Button, Label, Alert} from 'reactstrap'
 
 var contract = require("@truffle/contract")
 const AffiliateContractJSON = require('./contracts/AffiliateContract.json')
@@ -12,7 +12,6 @@ class OwnerActionsForm extends React.Component {
     this.affiliateContract.setProvider(this.web3.currentProvider)
     this.state = {
       mainContractAddress: '',
-      txValue: 0,
       contractErrorMessage: ''
     }
     this.handleInputChange = this.handleInputChange.bind(this)
@@ -22,8 +21,7 @@ class OwnerActionsForm extends React.Component {
 
   handleInputChange(event) {
     const {name, value} = event.target
-    this.setState({[name]: value})
-    this.setState({contractErrorMessage: ''})
+    this.setState({[name]: value, contractErrorMessage: ''})
   }
 
   async getAccount() {
@@ -42,6 +40,7 @@ class OwnerActionsForm extends React.Component {
       this.setState({contractErrorMessage: "Contract error: " + message.message})
     } else {
       console.log(error)
+      this.setState({contractErrorMessage: "Error: " + error.message})
     }
   }
   
@@ -50,8 +49,9 @@ class OwnerActionsForm extends React.Component {
       this.setState({contractErrorMessage: ''})
       const account = await this.getAccount()
       const mainContract = await this.affiliateContract.at(this.state.mainContractAddress.trim())
-      await mainContract.createNextSubContract.estimateGas({from: account, value: this.web3.utils.toWei(String(this.state.txValue))})
-      const result = await mainContract.createNextSubContract({from: account, value: this.web3.utils.toWei(String(this.state.txValue))})
+      const subcontractStake = await mainContract.subcontractStake.call()
+      await mainContract.createNextSubContract.estimateGas({from: account, value: String(subcontractStake)})
+      const result = await mainContract.createNextSubContract({from: account, value: String(subcontractStake)})
       console.log(result)
     } catch(err) {
       this.printErrorMessage(err)
@@ -74,7 +74,8 @@ class OwnerActionsForm extends React.Component {
   render() {
     return(<React.Fragment>
       <Form id="inputForm">
-        <h2>Perform owner actions</h2>
+        <h4>Perform owner actions</h4>
+        <h5>Must be logged in as owner.</h5>
         <FormGroup>
           <Label for="mainContractAddress">Main contract address</Label>
           <Input
@@ -85,21 +86,17 @@ class OwnerActionsForm extends React.Component {
             id="mainContractAddress" 
           />
         </FormGroup>
-        <Button color="primary" form='inputForm' onClick={ this.handleResolveMainContract }>Resolve main contract</Button>
         <FormGroup>
-          <Label for="txValue">Transaction value (for create next subcontract), in Ether</Label>
-          <Input
-            type="text"
-            name = "txValue"
-            defaultValue={this.state.txValue}
-            onChange={this.handleInputChange}
-            id="txValue" 
-          />
+          <Button color="primary" form='inputForm' onClick={ this.handleCreateNextSubcontract }>Create next subcontract</Button>
+          <Button color="primary" form='inputForm' onClick={ this.handleResolveMainContract }>Resolve main contract</Button>
         </FormGroup>
-        <Button color="primary" form='inputForm' onClick={ this.handleCreateNextSubcontract }>Create next subcontract</Button>
-        <div>
-          { this.state.contractErrorMessage }
-        </div>
+        { this.state.contractErrorMessage !== '' &&
+          <FormGroup>
+            <Alert color="danger">
+              { this.state.contractErrorMessage }
+            </Alert>
+          </FormGroup>
+        }
       </Form>
     </React.Fragment>)
   }

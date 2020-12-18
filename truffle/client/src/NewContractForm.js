@@ -1,5 +1,5 @@
 import React from 'react'
-import {Form, FormGroup, Input, Button, Label} from 'reactstrap'
+import {Form, FormGroup, Input, Button, Label, Alert, Col} from 'reactstrap'
 
 var contract = require("@truffle/contract")
 const AffiliateContractJSON = require('./contracts/AffiliateContract.json')
@@ -16,7 +16,7 @@ class NewContractForm extends React.Component {
     // Note: all monetary amounts are in Ether and all time amounts are in minutes.
     this.state = {
       affiliateAddress: '',
-      formOracleAddress: '',
+      oracleAddress: '',
       subcontractStake: 1,
       totalSubcontracts: 3,
       subcontractDuration: 1,
@@ -28,7 +28,6 @@ class NewContractForm extends React.Component {
       contractErrorMessage: '',
       newContractAddress: '',
       firstSubcontractAddress: '',
-      displayOracleAddress: ''
     }
     this.handleInputChange = this.handleInputChange.bind(this)
     this.handleCreateNewContract = this.handleCreateNewContract.bind(this)
@@ -37,8 +36,7 @@ class NewContractForm extends React.Component {
 
   handleInputChange(event) {
     const {name, value} = event.target
-    this.setState({[name]: value})
-    this.setState({contractErrorMessage: ''})
+    this.setState({[name]: value, contractErrorMessage: ''})
   }
 
   async getAccount() {
@@ -57,6 +55,7 @@ class NewContractForm extends React.Component {
       this.setState({contractErrorMessage: "Contract error: " + message.message})
     } else {
       console.log(error)
+      this.setState({contractErrorMessage: "Error: " + error.message})
     }
   }
 
@@ -87,7 +86,7 @@ class NewContractForm extends React.Component {
       // The duration values need to be converted into seconds, currently they are given in minutes.
       const newContract = await this.affiliateContract.new(
         this.state.affiliateAddress,
-        this.state.formOracleAddress,
+        this.state.oracleAddress,
         this.state.totalSubcontracts,
         Number(this.state.subcontractDuration) * 60,
         Number(this.state.sellerGracePeriodDuration) * 60,
@@ -110,25 +109,38 @@ class NewContractForm extends React.Component {
 
   async handleGetOracleAddress(event) {
     try {
+      this.setState({contractErrorMessage: ''})
       const networkId = await this.web3.eth.net.getId()
       this.affiliateOracle.setNetwork(networkId)
       const address = AffiliateOracleJSON.networks[networkId].address
       await this.affiliateOracle.at(address)
-      this.setState({displayOracleAddress: String(address)})
+      this.setState({oracleAddress: String(address)})
     } catch(err) {
-      console.log(err)
+      this.printErrorMessage(err)
     }
   }
 
   render() {
     return(<React.Fragment>
     <Form id="inputForm">
-      <h2>Create a new affiliate contract</h2>
-      <h3>The current account in Metamask will be the owner of this contract.</h3>
-      <Button color="primary" form='inputForm' onClick={ this.handleGetOracleAddress }>Get default oracle address</Button>
-      { this.state.displayOracleAddress }
-      <FormGroup>
-        <Label for="affiliateAddress">Affiliate's Ethereum Wallet Address</Label>
+      <h4>Create a new affiliate contract</h4>
+      <h5>The current account in Metamask will be the owner of this contract.</h5>
+      <FormGroup row>
+        <Label for="oracleAddress" sm={3}>Oracle address</Label>
+        <Col>
+        <Input
+          type="text"
+          name = "oracleAddress"
+          defaultValue={this.state.oracleAddress}
+          onChange={this.handleInputChange}
+          id="oracleAddress"
+        />
+        </Col>
+        <Button color="primary" form='inputForm' onClick={ this.handleGetOracleAddress }>Get default oracle address</Button>  
+      </FormGroup>
+      <FormGroup row>
+        <Label for="affiliateAddress" sm={3}>Affiliate wallet address</Label>
+        <Col>
         <Input
           type="text"
           name = "affiliateAddress"
@@ -136,31 +148,47 @@ class NewContractForm extends React.Component {
           onChange={this.handleInputChange}
           id="affiliateAddress" 
         />
+        </Col>
       </FormGroup>
-      <FormGroup>
-        <Label for="affiliateAddress">Oracle Address</Label>
-        <Input
-          type="text"
-          name = "formOracleAddress"
-          defaultValue={this.state.formOracleAddress}
-          onChange={this.handleInputChange}
-          id="formOracleAddress"
-        />
-      </FormGroup>
-      <FormGroup>
-        <Label for="subcontractStake">Subcontract stake, in Ether</Label>
+      <FormGroup row>
+        <Label for="subcontractDuration" sm={4}>Subcontract duration in minutes</Label>
+        <Col>
         <Input
           type="number"
-          name = "subcontractStake"
-          defaultValue={this.state.subcontractStake}
+          name = "subcontractDuration"
+          defaultValue={this.state.subcontractDuration}
           onChange={this.handleInputChange}
-          id="subcontractStake"
-          min={0} 
-          step={.1}
+          id="subcontractDuration"
         />
+        </Col>
       </FormGroup>
-      <FormGroup>
-        <Label for="totalSubcontracts">Number of Subcontracts (min 3)</Label>
+      <FormGroup row>
+        <Label for="sellerGracePeriodDuration" sm={4}>Seller grace period duration in minutes</Label>
+        <Col>
+        <Input
+          type="number"
+          name = "sellerGracePeriodDuration"
+          defaultValue={this.state.sellerGracePeriodDuration}
+          onChange={this.handleInputChange}
+          id="sellerGracePeriodDuration"
+        />
+        </Col>
+      </FormGroup>
+      <FormGroup row>
+        <Label for="contractEndGracePeriodDuration" sm={4}>Contract end grace period duration in minutes</Label>
+        <Col>
+        <Input
+          type="number"
+          name = "contractEndGracePeriodDuration"
+          defaultValue={this.state.contractEndGracePeriodDuration}
+          onChange={this.handleInputChange}
+          id="contractEndGracePeriodDuration"
+        />
+        </Col>
+      </FormGroup>
+      <FormGroup row>
+        <Label for="totalSubcontracts" sm={3}>Number of subcontracts (min. 3)</Label>
+        <Col>
         <Input
           type="number"
           name = "totalSubcontracts"
@@ -171,9 +199,25 @@ class NewContractForm extends React.Component {
           max={100}
           step={1}
         />
+        </Col>
       </FormGroup>
-      <FormGroup>
-        <Label for="incentiveFee">Incentive Fee amount, in Ether</Label>
+      <FormGroup row>
+        <Label for="subcontractStake" sm={3}>Subcontract stake in ETH</Label>
+        <Col>
+        <Input
+          type="number"
+          name = "subcontractStake"
+          defaultValue={this.state.subcontractStake}
+          onChange={this.handleInputChange}
+          id="subcontractStake"
+          min={0} 
+          step={0.01}
+        />
+        </Col>
+      </FormGroup>
+      <FormGroup row>
+        <Label for="incentiveFee" sm={3}>Seller incentive fee in ETH</Label>
+        <Col>
         <Input
           type="number"
           name = "incentiveFee"
@@ -181,64 +225,36 @@ class NewContractForm extends React.Component {
           onChange={this.handleInputChange}
           id="incentiveFee"
           min={0} 
-          step={1}
+          step={0.01}
         />
+        </Col>
       </FormGroup>
-      <FormGroup>
-        <Label for="affiliateRate">Commission Rate, as an integer percentage</Label>
+      <FormGroup row>
+        <Label for="affiliateRate" sm={3}>Commission rate as an integer %</Label>
+        <Col>
         <Input
           type="number"
           name = "affiliateRate"
           defaultValue={this.state.affiliateRate}
           onChange={this.handleInputChange}
           id="affiliateRate"
-          min={0} 
-          max={100}
-          step={.5}
-        />
-      </FormGroup>
-      <FormGroup>
-        <Label for="sellerGracePeriodDuration">Seller Grace Period Length, in minutes</Label>
-        <Input
-          type="number"
-          name = "sellerGracePeriodDuration"
-          defaultValue={this.state.sellerGracePeriodDuration}
-          onChange={this.handleInputChange}
-          id="sellerGracePeriodDuration"
-          min={1} 
+          min={0}
           step={1}
         />
+        </Col>
       </FormGroup>
       <FormGroup>
-        <Label for="subcontractDuration">Subcontract duration, in minutes</Label>
-        <Input
-          type="number"
-          name = "subcontractDuration"
-          defaultValue={this.state.subcontractDuration}
-          onChange={this.handleInputChange}
-          id="subcontractDuration"
-          min={0} 
-          step={1}
-        />
+        <Button color="primary" form='inputForm' onClick={ this.handleCreateNewContract }>Deploy new contract</Button>
       </FormGroup>
-      <FormGroup>
-        <Label for="contractEndGracePeriodDuration">Contract end grace period duration, in minutes</Label>
-        <Input
-          type="number"
-          name = "contractEndGracePeriodDuration"
-          defaultValue={this.state.contractEndGracePeriodDuration}
-          onChange={this.handleInputChange}
-          id="contractEndGracePeriodDuration"
-          min={0} 
-          step={1}
-        />
-      </FormGroup>
-      <Button color="primary" form='inputForm' onClick={ this.handleCreateNewContract }>Submit</Button>
-      <div>
-        { this.state.contractErrorMessage }
-      </div>
-      <h2>New contract address: { this.state.newContractAddress }</h2>
-      <h2>First subcontract address: { this.state.firstSubcontractAddress }</h2>
+      { this.state.contractErrorMessage !== '' &&
+        <FormGroup>
+          <Alert color="danger">
+            { this.state.contractErrorMessage }
+          </Alert>
+        </FormGroup>
+      }
+      <h2>New contract address: <code className="large">{ this.state.newContractAddress }</code></h2>
+      <h2>First subcontract address: <code className="large">{ this.state.firstSubcontractAddress }</code></h2>
     </Form>
     </React.Fragment>)
   }
