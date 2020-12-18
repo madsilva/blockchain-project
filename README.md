@@ -42,4 +42,5 @@ The project test website will be available at `http://localhost:3000/`. See the 
 
 In order to run the demos properly make sure to add at least the first 3 Ganache account wallet addresses to `affcodes.txt` before running.
 
-To run the 2 demo scripts, cd into `~/truffle/client/oracle` and run either `node Demo.js` or `node AffDisputeDemo.js`.
+To run the 2 demo scripts, cd into `~/truffle/client/oracle` and run either `node Demo.js` or `node AffDisputeDemo.js`. AffiliateOracle.js and tx_generator.py should be running before starting the Demos. 
+These scripts automate the two example sequences of contract interactions explained in the paper and highlighted on the FSM diagrams. Demo.js demonstrates the expected contract flow and AffDisputeDemo.js demonstrates dispute handling. These demos are intended to show basic contract flow in under 8 minutes, so the terms of the example agreements are not realistic for practical use. 
