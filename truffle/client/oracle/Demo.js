@@ -137,8 +137,8 @@ async function nextSlice() {
   if(index+1<nSubcontracts){
     logColor("TIME: Slice " + (index+1) + " started","magenta");
     if(index+1<nSubcontracts){
-      let temp=index+1
-      logColor("TIME: SC" + (index+1) + " Seller Grace Period started","magenta");
+      let temp=index
+      logColor("TIME: SC" + (index) + " Seller Grace Period started","magenta");
       setTimeout(function() { logColor("TIME: SC" + (temp) + " Seller Grace Period ended","magenta"); }, SGPlength*1000);
     }
   }
@@ -167,47 +167,43 @@ async function sliceActions(slice) {
   switch(slice){
     case 0:
       setTimeout(function() {updateCurrentTotal(0,"Affiliate")  }, (sliceLength/12)*1000);
-      setTimeout(function() {checkSales(0,"Affiliate")  }, (2*sliceLength/12)*1000);
       setTimeout(function() {updateCurrentTotal(0,"Affiliate")  }, (3*sliceLength/12)*1000);
-      setTimeout(function() {checkSales(0,"Affiliate")  }, (4*sliceLength/12)*1000);
+      setTimeout(function() {updateCurrentTotal(0,"Affiliate")  }, (5*sliceLength/12)*1000);
+      setTimeout(function() {updateCurrentTotal(0,"Affiliate")  }, (7*sliceLength/12)*1000);
+      setTimeout(function() {updateCurrentTotal(0,"Affiliate")  }, (9*sliceLength/12)*1000);
+      setTimeout(function() {updateCurrentTotal(0,"Affiliate")  }, (11*sliceLength/12)*1000);
       break;
 
     case 1:
       setTimeout(function() {updateCurrentTotal(0,"Affiliate")  }, (sliceLength/12)*1000);
-      setTimeout(function() {checkSales(0,"Affiliate")  }, (2*sliceLength/12)*1000);
       setTimeout(function() {createNextSubContract(1,"Seller")  }, (2.5*sliceLength/12)*1000);
       setTimeout(function() {getCurrentSubcontract(1,"Seller")  }, (4*sliceLength/12)*1000);
       setTimeout(function() {getCurrentSubcontract(1,"Affiliate")  }, (4.1*sliceLength/12)*1000);
       setTimeout(function() {affiliateResolve(0,"Affiliate")  }, (5*sliceLength/12)*1000);
       setTimeout(function() {updateCurrentTotal(1,"Affiliate")  }, (6*sliceLength/12)*1000);
-      setTimeout(function() {checkSales(1,"Affiliate")  }, (6.2*sliceLength/12)*1000);
       break;
 
     case 2:
-      setTimeout(function() {updateCurrentTotal(1,"Affiliate")  }, (sliceLength/12)*1000);
-      setTimeout(function() {checkSales(1,"Affiliate")  }, (2*sliceLength/12)*1000);
-      setTimeout(function() {createNextSubContract(2,"Seller")  }, (2.5*sliceLength/12)*1000);
-      setTimeout(function() {getCurrentSubcontract(2,"Seller")  }, (4*sliceLength/12)*1000);
-      setTimeout(function() {getCurrentSubcontract(2,"Affiliate")  }, (4.1*sliceLength/12)*1000);
-      setTimeout(function() {affiliateResolve(1,"Affiliate")  }, (5*sliceLength/12)*1000);
+      setTimeout(function() {createNextSubContract(2,"Seller")  }, (1*sliceLength/12)*1000);
+      setTimeout(function() {getCurrentSubcontract(2,"Seller")  }, (2*sliceLength/12)*1000);
+      setTimeout(function() {getCurrentSubcontract(2,"Affiliate")  }, (2.1*sliceLength/12)*1000);
+      setTimeout(function() {updateCurrentTotal(1,"Affiliate")  }, (3*sliceLength/12)*1000);
+      setTimeout(function() {updateCurrentTotal(2,"Affiliate")  }, (5*sliceLength/12)*1000);
       setTimeout(function() {updateCurrentTotal(2,"Affiliate")  }, (6*sliceLength/12)*1000);
-      setTimeout(function() {checkSales(2,"Affiliate")  }, (6.2*sliceLength/12)*1000);
+      setTimeout(function() {affiliateResolve(1,"Affiliate")  }, (7*sliceLength/12)*1000);
       break;
 
     case 3:
-      setTimeout(function() {updateCurrentTotal(2,"Affiliate")  }, (1*sliceLength/12)*1000);
-      setTimeout(function() {checkSales(2,"Affiliate")  }, (2*sliceLength/12)*1000);
       setTimeout(function() {createNextSubContract(3,"Seller")  }, (2.5*sliceLength/12)*1000);
-      setTimeout(function() {getCurrentSubcontract(3,"Seller")  }, (4*sliceLength/12)*1000);
-      setTimeout(function() {getCurrentSubcontract(3,"Affiliate")  }, (4.1*sliceLength/12)*1000);
+      setTimeout(function() {getCurrentSubcontract(3,"Seller")  }, (3.5*sliceLength/12)*1000);
+      setTimeout(function() {getCurrentSubcontract(3,"Affiliate")  }, (3.6*sliceLength/12)*1000);
+      setTimeout(function() {updateCurrentTotal(2,"Affiliate")  }, (4*sliceLength/12)*1000);
       setTimeout(function() {affiliateResolve(2,"Affiliate")  }, (5*sliceLength/12)*1000);
       setTimeout(function() {updateCurrentTotal(3,"Affiliate")  }, (6*sliceLength/12)*1000);
-      setTimeout(function() {checkSales(3,"Affiliate")  }, (6.1*sliceLength/12)*1000);
       break;
 
     case 'AGP':
       setTimeout(function() {updateCurrentTotal(3,"Affiliate")  }, (3*AGPlength/12)*1000);
-      setTimeout(function() {checkSales(3,"Affiliate")  }, (4*AGPlength/12)*1000);
       setTimeout(function() {affiliateResolve(3,"Affiliate")  }, (6*AGPlength/12)*1000);
       break;
 
@@ -227,8 +223,8 @@ async function sliceActions(slice) {
   addresses["Seller"]=ownerAddr
   contracts['main']=mainContract
   contracts['0']=sc0
-  console.log("Seller called setOracleAddress")
-  gaslog("Seller",await mainContract.setOracleAddress(oracleAddr, {from: ownerAddr}))
+  //console.log("Seller called setOracleAddress")
+  //gaslog("Seller",await mainContract.setOracleAddress(oracleAddr, {from: ownerAddr}))
   
   startTime = await sc0.startTime.call()
   var now = new Date()
