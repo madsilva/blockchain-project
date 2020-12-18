@@ -45,3 +45,10 @@ In order to run the demos properly make sure to add at least the first 3 Ganache
 To run the 2 demo scripts, cd into `~/truffle/client/oracle` and run either `node Demo.js` or `node AffDisputeDemo.js`. Ensure that all scripts enumerated above are running before starting the demos. 
 
 These scripts automate the two example sequences of contract interactions explained in the paper and highlighted on the FSM diagrams. `Demo.js` demonstrates the expected contract flow and `AffDisputeDemo.js` demonstrates dispute handling. These demos are intended to show basic contract flow in under 8 minutes, so the terms of the example agreements are not realistic for practical use. 
+
+### Project structure
+**/contracts** - The source code for our smart contracts.
+**/migrations** - Truffle's automated deployment config files. We only use this to deploy an instance of AffiliateOracle.
+**/client** - The root directory of the React project and server.
+**/client/oracle** - Where we have the 2 demo scripts and AffiliateOracle.js.
+**/client/oracle/test_json** - Files needed for generating dummy OpenBazaar transaction data. This data is generated in test.json by tx_generator.py using the affiliate codes listed in affcodes.txt.
