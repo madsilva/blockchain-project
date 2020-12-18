@@ -1,5 +1,5 @@
 import React from 'react'
-import {Form, FormGroup, Input, Button, Label, Alert} from 'reactstrap'
+import {Form, FormGroup, Input, Button, Label, Alert, Col} from 'reactstrap'
 
 var contract = require("@truffle/contract")
 const AffiliateSubcontractJSON = require('./contracts/AffiliateSubcontract.json')
@@ -75,8 +75,9 @@ class AffiliateActionsForm extends React.Component {
     <Form id="inputForm">
       <h4>Perform affiliate actions</h4>
       <h5>Must be logged in as affiliate.</h5>
-      <FormGroup>
-        <Label for="subcontractAddress">Subcontract address</Label>
+      <FormGroup row>
+        <Label for="subcontractAddress" sm={3}>Subcontract address</Label>
+        <Col>
         <Input
           type="text"
           name = "subcontractAddress"
@@ -84,14 +85,19 @@ class AffiliateActionsForm extends React.Component {
           onChange={this.handleInputChange}
           id="subcontractAddress"
         />
+        </Col>
+      </FormGroup>
+      <FormGroup>
         <Button color="primary" form='inputForm' onClick={ this.handleUpdateTotal }>Update total</Button>
         <Button color="primary" form='inputForm' onClick={ this.handleResolveSubcontract }>Resolve subcontract</Button>
       </FormGroup>
-      <FormGroup>
-        <Alert color="warning">
-          { this.state.contractErrorMessage }
-        </Alert>
-      </FormGroup>
+      { this.state.contractErrorMessage != '' &&
+        <FormGroup>
+          <Alert color="danger">
+            { this.state.contractErrorMessage }
+          </Alert>
+        </FormGroup>
+      }
     </Form>
     </React.Fragment>)
   }

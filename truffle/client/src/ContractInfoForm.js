@@ -1,5 +1,5 @@
 import React from 'react'
-import {Form, FormGroup, Input, Button, Label, Table, Alert} from 'reactstrap'
+import {Form, FormGroup, Input, Button, Label, Table, Alert, Col} from 'reactstrap'
 
 const contract = require("@truffle/contract")
 const AffiliateContractJSON = require('./contracts/AffiliateContract.json')
@@ -45,7 +45,6 @@ class ContractInfoForm extends React.Component {
     }
     this.handleInputChange = this.handleInputChange.bind(this)
     this.handleMainContractInfo = this.handleMainContractInfo.bind(this)
-    this.handleMainContractParams = this.handleMainContractParams.bind(this)
     this.handleSubcontractIndex = this.handleSubcontractIndex.bind(this)
     this.handleSubcontractInfo = this.handleSubcontractInfo.bind(this)
   }
@@ -74,21 +73,6 @@ class ContractInfoForm extends React.Component {
       const mainContractExpiration = await mainContract.contractExpiration.call()
       const subcontractStake = await mainContract.subcontractStake.call()
       const currentSubcontract = await mainContract.getCurrentSubcontract.call()
-      this.setState({
-        subcontractsSoFar: String(subcontractsSoFar),
-        mainContractExpiration: new Date(mainContractExpiration * 1000).toLocaleString("en-US"),
-        subcontractStake: String(this.web3.utils.fromWei(subcontractStake)),
-        currentSubcontract: String(currentSubcontract)
-      })
-    } catch(err) {
-      this.printErrorMessage(err)
-    }
-  }
-
-  async handleMainContractParams(event) {
-    try {
-      this.setState({contractErrorMessage: ''})
-      const mainContract = await this.affiliateContract.at(this.state.mainContractAddress.trim())
       const owner = await mainContract.owner.call()
       const affiliate = await mainContract.affiliate.call()
       const totalSubcontracts = await mainContract.totalSubcontracts.call()
@@ -98,6 +82,10 @@ class ContractInfoForm extends React.Component {
       const affiliatePercentage = await mainContract.humanReadableAffiliatePercentage.call()
       const oracle = await mainContract.oracle.call()
       this.setState({
+        subcontractsSoFar: String(subcontractsSoFar),
+        mainContractExpiration: new Date(mainContractExpiration * 1000).toLocaleString("en-US"),
+        subcontractStake: String(this.web3.utils.fromWei(subcontractStake)),
+        currentSubcontract: String(currentSubcontract),
         owner: String(owner),
         affiliate: String(affiliate),
         totalSubcontracts: String(totalSubcontracts),
@@ -109,7 +97,7 @@ class ContractInfoForm extends React.Component {
       })
     } catch(err) {
       this.printErrorMessage(err)
-    } 
+    }
   }
 
   async handleSubcontractIndex(event) {
@@ -166,14 +154,17 @@ class ContractInfoForm extends React.Component {
     return(<React.Fragment>
       <Form id="inputForm">
         <h4>Get info about existing contracts or subcontracts</h4>
-        <h4>You can do this while using any account in Metamask</h4>
-        <FormGroup>
-          <Alert color="warning">
-            { this.state.contractErrorMessage }
-          </Alert>
-        </FormGroup>
-        <FormGroup>
-          <Label for="mainContractAddress">Main contract address</Label>
+        <h5>You can do this while using any account in Metamask.</h5>
+        { this.state.contractErrorMessage != '' &&
+          <FormGroup>
+            <Alert color="danger">
+              { this.state.contractErrorMessage }
+            </Alert>
+          </FormGroup>
+        }
+        <FormGroup row>
+          <Label for="mainContractAddress" sm={3}>Main contract address</Label>
+          <Col>
           <Input
             type="text"
             name = "mainContractAddress"
@@ -181,43 +172,48 @@ class ContractInfoForm extends React.Component {
             onChange={this.handleInputChange}
             id="mainContractAddress"
           />
+          </Col>
           <Button color="primary" form='inputForm' onClick={ this.handleMainContractInfo }>Get main contract info</Button>
-          <Table bordered size="sm">
-            <code>
-              <tbody>
-                <tr>
-                  <td>Main contract expiration: <span className="highlight">{ this.state.mainContractExpiration }</span></td>
-                  <td>Subcontracts so far: <span className="highlight">{ this.state.subcontractsSoFar }</span></td>
-                </tr>
-                <tr>
-                  <td>Current subcontract: <span className="highlight">{ this.state.currentSubcontract }</span></td>
-                  <td>Subcontract stake: <span className="highlight">{ this.state.subcontractStake } ETH</span></td>
-                </tr>
-              </tbody>
-            </code>
-          </Table>
-          <Button color="primary" form='inputForm' onClick={ this.handleMainContractParams }>Get main contract parameters</Button>
-          <Table bordered size="sm">
-            <code>
-              <tbody>
-                <tr>
-                  <td>Owner: <span className="highlight">{ this.state.owner }</span></td>
-                  <td>Affiliate: <span className="highlight">{ this.state.affiliate }</span></td>
-                  <td>Oracle: <span className="highlight">{ this.state.oracle }</span></td>
-                </tr>
-                <tr>
-                  <td>Total subcontracts: <span className="highlight">{ this.state.totalSubcontracts }</span></td>
-                  <td>Incentive fee: <span className="highlight">{ this.state.incentiveFee } ETH</span></td>
-                  <td>Affiliate Percentage: <span className="highlight">{ this.state.affiliatePercentage }</span></td>
-                </tr>
-                <tr>
-                  <td>Subcontract duration: <span className="highlight">{ this.state.subcontractDuration } minutes</span></td>
-                  <td>Grace period duration: <span className="highlight">{ this.state.gracePeriodDuration } minutes</span></td>
-                </tr>
-              </tbody>
-            </code>
-          </Table>
-          <Label for="subcontractIndex">Subcontract index</Label>
+        </FormGroup>
+        <Table bordered size="sm">
+          <tbody>
+            <tr>
+              <th>Main contract info</th>
+            </tr>
+            <tr>
+              <td>Main contract expiration: <span className="highlight">{ this.state.mainContractExpiration }</span></td>
+              <td>Subcontracts so far: <span className="highlight">{ this.state.subcontractsSoFar }</span></td>
+            </tr>
+            <tr>
+              <td>Current subcontract: <span className="highlight">{ this.state.currentSubcontract }</span></td>
+              <td>Subcontract stake: <span className="highlight">{ this.state.subcontractStake } ETH</span></td>
+            </tr>
+          </tbody>
+        </Table>
+        <Table bordered size="sm">
+          <tbody>
+            <tr>
+              <th>Main contract parameters</th>
+            </tr>
+            <tr>
+              <td>Owner: <span className="highlight">{ this.state.owner }</span></td>
+              <td>Affiliate: <span className="highlight">{ this.state.affiliate }</span></td>
+              <td>Oracle: <span className="highlight">{ this.state.oracle }</span></td>
+            </tr>
+            <tr>
+              <td>Total subcontracts: <span className="highlight">{ this.state.totalSubcontracts }</span></td>
+              <td>Incentive fee: <span className="highlight">{ this.state.incentiveFee } ETH</span></td>
+              <td>Affiliate Percentage: <span className="highlight">{ this.state.affiliatePercentage }</span></td>
+            </tr>
+            <tr>
+              <td>Subcontract duration: <span className="highlight">{ this.state.subcontractDuration } minutes</span></td>
+              <td>Grace period duration: <span className="highlight">{ this.state.gracePeriodDuration } minutes</span></td>
+            </tr>
+          </tbody>
+        </Table>
+        <FormGroup row>
+          <Label for="subcontractIndex" sm={3}>Subcontract index</Label>
+          <Col>
           <Input
             type="text"
             name = "subcontractIndex"
@@ -225,19 +221,19 @@ class ContractInfoForm extends React.Component {
             onChange={this.handleInputChange}
             id="subcontractIndex"
           />
+          </Col>
           <Button color="primary" form='inputForm' onClick={ this.handleSubcontractIndex }>Get subcontract address</Button>
-          <Table bordered size="sm">
-            <code>
-              <tbody>
-                <tr>
-                  <td>Subcontract at index { this.state.subcontractIndex }: <span className="highlight">{ this.state.subcontractAtIndex }</span></td>
-                </tr>
-              </tbody>
-            </code>
-          </Table>
         </FormGroup>
-        <FormGroup>
-          <Label for="subcontractAddress">Subcontract address</Label>
+        <Table bordered size="sm">
+          <tbody>
+            <tr>
+              <td>Subcontract at given index: <span className="highlight">{ this.state.subcontractAtIndex }</span></td>
+            </tr>
+          </tbody>
+        </Table>
+        <FormGroup row>
+          <Label for="subcontractAddress" sm={3}>Subcontract address</Label>
+          <Col>
           <Input
             type="text"
             name = "subcontractAddress"
@@ -245,31 +241,30 @@ class ContractInfoForm extends React.Component {
             onChange={this.handleInputChange}
             id="subcontractAddress"
           />
+          </Col>
           <Button color="primary" form='inputForm' onClick={ this.handleSubcontractInfo }>Get subcontract info</Button>
-          <Table bordered size="sm">
-            <code>
-              <tbody>
-                <tr>
-                  <td>Main contract address: <span className="highlight">{ this.state.subcontractMainContractAddress }</span></td>
-                  <td>Next subcontract: <span className="highlight">{ this.state.nextSubcontractAddress }</span></td>
-                  <td>Index number: <span className="highlight">{ this.state.indexNumber }</span></td>
-                </tr>
-                <tr>
-                  <td>Subcontract expiration: <span className="highlight">{ this.state.subcontractExpiration }</span></td>
-                  <td>Seller grace period end: <span className="highlight">{ this.state.sellerGracePeriodEnd }</span></td>
-                  <td>Affiliate resolved: <span className="highlight">{ this.state.affiliateResolved }</span></td>
-                  <td>Grace period expired: <span className="highlight">{ this.state.gracePeriodExpired }</span></td>
-                </tr>
-                <tr>
-                  <td>Total last updated: <span className="highlight">{ this.state.totalLastUpdated }</span></td>
-                  <td>Start time: <span className="highlight">{ this.state.startTime }</span></td>
-                  <td>Current total: <span className="highlight">{ this.state.currentTotal }</span></td>
-                  <td>Payout: <span className="highlight">{ this.state.payout }</span></td>
-                </tr>
-              </tbody>
-            </code>
-          </Table>
-        </FormGroup> 
+        </FormGroup>
+        <Table bordered size="sm">
+          <tbody>
+            <tr>
+              <td>Main contract address: <span className="highlight">{ this.state.subcontractMainContractAddress }</span></td>
+              <td>Next subcontract: <span className="highlight">{ this.state.nextSubcontractAddress }</span></td>
+              <td>Index number: <span className="highlight">{ this.state.indexNumber }</span></td>
+            </tr>
+            <tr>
+              <td>Subcontract expiration: <span className="highlight">{ this.state.subcontractExpiration }</span></td>
+              <td>Seller grace period end: <span className="highlight">{ this.state.sellerGracePeriodEnd }</span></td>
+              <td>Affiliate resolved: <span className="highlight">{ this.state.affiliateResolved }</span></td>
+              <td>Grace period expired: <span className="highlight">{ this.state.gracePeriodExpired }</span></td>
+            </tr>
+            <tr>
+              <td>Total last updated: <span className="highlight">{ this.state.totalLastUpdated }</span></td>
+              <td>Start time: <span className="highlight">{ this.state.startTime }</span></td>
+              <td>Current total: <span className="highlight">{ this.state.currentTotal }</span></td>
+              <td>Payout: <span className="highlight">{ this.state.payout }</span></td>
+            </tr>
+          </tbody>
+        </Table> 
       </Form>
     </React.Fragment>)
   }

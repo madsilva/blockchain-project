@@ -14,8 +14,20 @@ code {
 }
 
 .highlight {
-  color: blue;
+  font-weight: bold;
+}
 
+.large {
+  font-size: 18pt;
+}
+
+button {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.table {
+  font-size: 11pt;
 }
 
 .App-logo {
@@ -85,11 +97,9 @@ input.form-control {
 
 
 .inline-input-btn .form-control {
-  margin: 0;
   width: 200px;
   border-radius: 0.25rem 0 0 0.25rem;
   float: left;
-  border-right: 0;
 }
 
 .inline-input-btn .btn {
