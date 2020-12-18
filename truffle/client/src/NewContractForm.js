@@ -1,5 +1,5 @@
 import React from 'react'
-import {Form, FormGroup, Input, Button, Label, Alert, Col, Row} from 'reactstrap'
+import {Form, FormGroup, Input, Button, Label, Alert, Col} from 'reactstrap'
 
 var contract = require("@truffle/contract")
 const AffiliateContractJSON = require('./contracts/AffiliateContract.json')
@@ -248,7 +248,7 @@ class NewContractForm extends React.Component {
       <FormGroup>
         <Button color="primary" form='inputForm' onClick={ this.handleCreateNewContract }>Deploy new contract</Button>
       </FormGroup>
-      { this.state.contractErrorMessage != '' &&
+      { this.state.contractErrorMessage !== '' &&
         <FormGroup>
           <Alert color="danger">
             { this.state.contractErrorMessage }

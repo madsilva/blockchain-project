@@ -153,9 +153,9 @@ class ContractInfoForm extends React.Component {
   render() {
     return(<React.Fragment>
       <Form id="inputForm">
-        <h4>Get info about existing contracts or subcontracts</h4>
+        <h4>Get info about existing contracts</h4>
         <h5>You can do this while using any account in Metamask.</h5>
-        { this.state.contractErrorMessage != '' &&
+        { this.state.contractErrorMessage !== '' &&
           <FormGroup>
             <Alert color="danger">
               { this.state.contractErrorMessage }
@@ -179,7 +179,7 @@ class ContractInfoForm extends React.Component {
             </Col>
           </Row>
         </FormGroup>
-        <Table bordered size="sm">
+        <Table bordered striped size="sm">
           <tbody>
             <tr>
               <th>Main contract info</th>
@@ -194,7 +194,7 @@ class ContractInfoForm extends React.Component {
             </tr>
           </tbody>
         </Table>
-        <Table bordered size="sm">
+        <Table bordered striped size="sm">
           <tbody>
             <tr>
               <th>Main contract parameters</th>
@@ -207,7 +207,7 @@ class ContractInfoForm extends React.Component {
             <tr>
               <td>Total subcontracts: <span className="highlight">{ this.state.totalSubcontracts }</span></td>
               <td>Incentive fee: <span className="highlight">{ this.state.incentiveFee } ETH</span></td>
-              <td>Affiliate Percentage: <span className="highlight">{ this.state.affiliatePercentage }</span></td>
+              <td>Affiliate Percentage: <span className="highlight">{ this.state.affiliatePercentage }%</span></td>
             </tr>
             <tr>
               <td>Subcontract duration: <span className="highlight">{ this.state.subcontractDuration } minutes</span></td>
@@ -256,7 +256,7 @@ class ContractInfoForm extends React.Component {
             </Col>
           </Row>
         </FormGroup>
-        <Table bordered size="sm">
+        <Table bordered striped size="sm">
           <tbody>
             <tr>
               <th>Subcontract info</th>

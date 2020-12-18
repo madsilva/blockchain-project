@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {TabContent, TabPane, Nav, NavItem, NavLink, Container} from 'reactstrap';
+import {TabContent, TabPane, Nav, NavItem, NavLink, Container, NavbarBrand} from 'reactstrap';
 
 import getWeb3 from "./getWeb3";
 import NewContractForm from "./NewContractForm.js";
@@ -35,6 +35,7 @@ class App extends Component {
       <Container>
         <div className="App">
           <Nav tabs>
+            <NavbarBrand href="/">Affiliate Contract Manager</NavbarBrand>
             <NavItem>
               <NavLink onClick={() => this.handleSelect('1')}>
                 Get info about existing contracts

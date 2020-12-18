@@ -30,36 +30,12 @@ button {
   font-size: 11pt;
 }
 
-.App-logo {
-  height: 40vmin;
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
+.navbar-brand {
   color: #09d3ac;
 }
 
 .form-group {
   margin: 10px;
-}
-
-.logs {
-  background-color: black;
-  font-size: 14px;
-  color: white;
-  font-weight: bold;
-  padding: 10px;
-  border-radius: 8px;
 }
 
 .tab-content {
@@ -81,27 +57,6 @@ button {
   border-top: 1px solid #ddd;
   border-left: 1px solid #ddd;
   border-right: 1px solid #ddd;
-}
-
-input.form-control {
+  margin-left: 5px;
   margin-right: 5px;
-}
-
-.alert-result {
-  margin-left: 0;
-}
-
-.small-input {
-  width: 200px;
-}
-
-
-.inline-input-btn .form-control {
-  width: 200px;
-  border-radius: 0.25rem 0 0 0.25rem;
-  float: left;
-}
-
-.inline-input-btn .btn {
-  border-radius: 0 0.25rem 0.25rem 0;
 }

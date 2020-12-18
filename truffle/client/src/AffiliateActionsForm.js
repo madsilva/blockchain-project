@@ -90,7 +90,7 @@ class AffiliateActionsForm extends React.Component {
         <Button color="primary" form='inputForm' onClick={ this.handleResolveSubcontract }>Resolve subcontract</Button>
       </FormGroup>
       <p>Remember to wait a little bit for the oracle call to go through after calling update total before calling it again or checking the total.</p>
-      { this.state.contractErrorMessage != '' &&
+      { this.state.contractErrorMessage !== '' &&
         <FormGroup>
           <Alert color="danger">
             { this.state.contractErrorMessage }

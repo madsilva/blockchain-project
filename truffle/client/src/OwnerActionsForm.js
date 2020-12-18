@@ -90,7 +90,7 @@ class OwnerActionsForm extends React.Component {
           <Button color="primary" form='inputForm' onClick={ this.handleCreateNextSubcontract }>Create next subcontract</Button>
           <Button color="primary" form='inputForm' onClick={ this.handleResolveMainContract }>Resolve main contract</Button>
         </FormGroup>
-        { this.state.contractErrorMessage != '' &&
+        { this.state.contractErrorMessage !== '' &&
           <FormGroup>
             <Alert color="danger">
               { this.state.contractErrorMessage }
