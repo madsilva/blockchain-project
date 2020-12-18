@@ -12,7 +12,6 @@ class OwnerActionsForm extends React.Component {
     this.affiliateContract.setProvider(this.web3.currentProvider)
     this.state = {
       mainContractAddress: '',
-      txValue: 0,
       contractErrorMessage: ''
     }
     this.handleInputChange = this.handleInputChange.bind(this)
@@ -50,8 +49,9 @@ class OwnerActionsForm extends React.Component {
       this.setState({contractErrorMessage: ''})
       const account = await this.getAccount()
       const mainContract = await this.affiliateContract.at(this.state.mainContractAddress.trim())
-      await mainContract.createNextSubContract.estimateGas({from: account, value: this.web3.utils.toWei(String(this.state.txValue))})
-      const result = await mainContract.createNextSubContract({from: account, value: this.web3.utils.toWei(String(this.state.txValue))})
+      const subcontractStake = await mainContract.subcontractStake.call()
+      await mainContract.createNextSubContract.estimateGas({from: account, value: String(subcontractStake)})
+      const result = await mainContract.createNextSubContract({from: account, value: String(subcontractStake)})
       console.log(result)
     } catch(err) {
       this.printErrorMessage(err)
@@ -85,18 +85,8 @@ class OwnerActionsForm extends React.Component {
             onChange={this.handleInputChange}
             id="mainContractAddress" 
           />
-          <Button color="primary" form='inputForm' onClick={ this.handleResolveMainContract }>Resolve main contract</Button>
-        </FormGroup>
-        <FormGroup>
-          <Label for="txValue">Transaction value (for create next subcontract), in Ether</Label>
-          <Input
-            type="text"
-            name = "txValue"
-            defaultValue={this.state.txValue}
-            onChange={this.handleInputChange}
-            id="txValue" 
-          />
           <Button color="primary" form='inputForm' onClick={ this.handleCreateNextSubcontract }>Create next subcontract</Button>
+          <Button color="primary" form='inputForm' onClick={ this.handleResolveMainContract }>Resolve main contract</Button>
         </FormGroup>
         <FormGroup>
           <Alert color="warning">

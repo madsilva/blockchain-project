@@ -37,7 +37,9 @@ code {
   color: #09d3ac;
 }
 
-
+.form-group {
+  margin: 10px;
+}
 
 .logs {
   background-color: black;
@@ -80,6 +82,7 @@ input.form-control {
 .small-input {
   width: 200px;
 }
+
 
 .inline-input-btn .form-control {
   margin: 0;
