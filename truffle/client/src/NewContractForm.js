@@ -139,7 +139,7 @@ class NewContractForm extends React.Component {
         <Button color="primary" form='inputForm' onClick={ this.handleGetOracleAddress }>Get default oracle address</Button>  
       </FormGroup>
       <FormGroup row>
-        <Label for="affiliateAddress" sm={3}>Affiliate's wallet address</Label>
+        <Label for="affiliateAddress" sm={3}>Affiliate wallet address</Label>
         <Col>
         <Input
           type="text"
@@ -151,7 +151,7 @@ class NewContractForm extends React.Component {
         </Col>
       </FormGroup>
       <FormGroup row>
-        <Label for="subcontractDuration" sm={4}>Per-subcontract duration in minutes</Label>
+        <Label for="subcontractDuration" sm={4}>Subcontract duration in minutes</Label>
         <Col>
         <Input
           type="number"
@@ -202,7 +202,7 @@ class NewContractForm extends React.Component {
         </Col>
       </FormGroup>
       <FormGroup row>
-        <Label for="subcontractStake" sm={3}>Per-subcontract stake in ETH</Label>
+        <Label for="subcontractStake" sm={3}>Subcontract stake in ETH</Label>
         <Col>
         <Input
           type="number"

@@ -189,8 +189,7 @@ class ContractInfoForm extends React.Component {
               <td>Subcontracts so far: <span className="highlight">{ this.state.subcontractsSoFar }</span></td>
             </tr>
             <tr>
-              <td>Current subcontract: <span className="highlight">{ this.state.currentSubcontract }</span></td>
-              <td>Subcontract stake: <span className="highlight">{ this.state.subcontractStake } ETH</span></td>
+              <td>Current subcontract address: <span className="highlight">{ this.state.currentSubcontract }</span></td>
             </tr>
           </tbody>
         </Table>
@@ -200,18 +199,20 @@ class ContractInfoForm extends React.Component {
               <th>Main contract parameters</th>
             </tr>
             <tr>
-              <td>Owner: <span className="highlight">{ this.state.owner }</span></td>
-              <td>Affiliate: <span className="highlight">{ this.state.affiliate }</span></td>
-              <td>Oracle: <span className="highlight">{ this.state.oracle }</span></td>
-            </tr>
-            <tr>
+              <td>Owner address: <span className="highlight">{ this.state.owner }</span></td>
               <td>Total subcontracts: <span className="highlight">{ this.state.totalSubcontracts }</span></td>
-              <td>Incentive fee: <span className="highlight">{ this.state.incentiveFee } ETH</span></td>
-              <td>Affiliate Percentage: <span className="highlight">{ this.state.affiliatePercentage }%</span></td>
+              <td>Subcontract stake: <span className="highlight">{ this.state.subcontractStake } ETH</span></td>
+              
             </tr>
             <tr>
+              <td>Affiliate address: <span className="highlight">{ this.state.affiliate }</span></td>
               <td>Subcontract duration: <span className="highlight">{ this.state.subcontractDuration } minutes</span></td>
-              <td>Grace period duration: <span className="highlight">{ this.state.gracePeriodDuration } minutes</span></td>
+              <td>Seller incentive fee: <span className="highlight">{ this.state.incentiveFee } ETH</span></td>
+            </tr>
+            <tr>
+              <td>Oracle address: <span className="highlight">{ this.state.oracle }</span></td>
+              <td>Seller grace period duration: <span className="highlight">{ this.state.gracePeriodDuration } minutes</span></td>
+              <td>Commission rate: <span className="highlight">{ this.state.affiliatePercentage }%</span></td>
             </tr>
           </tbody>
         </Table>
@@ -263,20 +264,22 @@ class ContractInfoForm extends React.Component {
             </tr>
             <tr>
               <td>Main contract address: <span className="highlight">{ this.state.subcontractMainContractAddress }</span></td>
-              <td>Next subcontract: <span className="highlight">{ this.state.nextSubcontractAddress }</span></td>
+              <td>Seller grace period end: <span className="highlight">{ this.state.sellerGracePeriodEnd }</span></td>
               <td>Index number: <span className="highlight">{ this.state.indexNumber }</span></td>
             </tr>
             <tr>
-              <td>Subcontract expiration: <span className="highlight">{ this.state.subcontractExpiration }</span></td>
-              <td>Seller grace period end: <span className="highlight">{ this.state.sellerGracePeriodEnd }</span></td>
-              <td>Affiliate resolved: <span className="highlight">{ this.state.affiliateResolved }</span></td>
-              <td>Grace period expired: <span className="highlight">{ this.state.gracePeriodExpired }</span></td>
+              <td>Next subcontract address: <span className="highlight">{ this.state.nextSubcontractAddress }</span></td>
+              <td>Total sales last updated: <span className="highlight">{ this.state.totalLastUpdated }</span></td>
+              <td>Current total sales: <span className="highlight">{ this.state.currentTotal }</span></td>
             </tr>
             <tr>
-              <td>Total last updated: <span className="highlight">{ this.state.totalLastUpdated }</span></td>
-              <td>Start time: <span className="highlight">{ this.state.startTime }</span></td>
-              <td>Current total: <span className="highlight">{ this.state.currentTotal }</span></td>
+              <td>Subcontract expiration: <span className="highlight">{ this.state.subcontractExpiration }</span></td>
+              <td>Start time for sales covered: <span className="highlight">{ this.state.startTime }</span></td>
               <td>Payout: <span className="highlight">{ this.state.payout }</span></td>
+            </tr>
+            <tr>
+              <td>Affiliate resolved: <span className="highlight">{ this.state.affiliateResolved }</span></td>
+              <td>Grace period expired: <span className="highlight">{ this.state.gracePeriodExpired }</span></td>
             </tr>
           </tbody>
         </Table> 
