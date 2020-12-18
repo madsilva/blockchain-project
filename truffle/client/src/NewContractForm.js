@@ -159,8 +159,6 @@ class NewContractForm extends React.Component {
           defaultValue={this.state.subcontractDuration}
           onChange={this.handleInputChange}
           id="subcontractDuration"
-          min={1} 
-          step={1}
         />
         </Col>
       </FormGroup>
@@ -173,8 +171,6 @@ class NewContractForm extends React.Component {
           defaultValue={this.state.sellerGracePeriodDuration}
           onChange={this.handleInputChange}
           id="sellerGracePeriodDuration"
-          min={1} 
-          step={1}
         />
         </Col>
       </FormGroup>
@@ -187,8 +183,6 @@ class NewContractForm extends React.Component {
           defaultValue={this.state.contractEndGracePeriodDuration}
           onChange={this.handleInputChange}
           id="contractEndGracePeriodDuration"
-          min={1} 
-          step={1}
         />
         </Col>
       </FormGroup>
@@ -216,6 +210,8 @@ class NewContractForm extends React.Component {
           defaultValue={this.state.subcontractStake}
           onChange={this.handleInputChange}
           id="subcontractStake"
+          min={0} 
+          step={0.01}
         />
         </Col>
       </FormGroup>
@@ -229,6 +225,7 @@ class NewContractForm extends React.Component {
           onChange={this.handleInputChange}
           id="incentiveFee"
           min={0} 
+          step={0.01}
         />
         </Col>
       </FormGroup>
@@ -241,7 +238,8 @@ class NewContractForm extends React.Component {
           defaultValue={this.state.affiliateRate}
           onChange={this.handleInputChange}
           id="affiliateRate"
-          min={0} 
+          min={0}
+          step={1}
         />
         </Col>
       </FormGroup>
