@@ -9,7 +9,7 @@
     "bootstrap": "^4.5.3",
     "react": "16.11.0",
     "react-dom": "16.11.0",
-    "react-scripts": "3.2.0",
+    "react-scripts": "5.0.1",
     "reactstrap": "^8.7.1",
     "truffle": "^5.1.57",
     "web3": "1.2.2"
